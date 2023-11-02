@@ -22,8 +22,9 @@ return new class extends Migration
             $table->string('fav_balls_name');
             $table->integer('rank_id');
             $table->date('birth_date');
-            $table->foreignIdFor(\App\Models\Drink::class, 'fav_drink_id')->nullable();
+            $table->foreignIdFor(\App\Models\Drink::class, 'fav_drink_id');
             $table->foreignIdFor(\App\Models\User::class, 'doublette_user_id')->nullable();
+            $table->foreignIdFor(\App\Models\Role::class, 'role_id')->nullable();
             $table->string('status');
             $table->rememberToken();
             $table->timestamps();

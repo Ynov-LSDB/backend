@@ -26,9 +26,10 @@ class User extends Authenticatable
         'fav_balls_name',
         'rank_id',
         'birth_date',
-        'fav_drink',
+        'fav_drink_id',
         'doublette_user_id',
         'status',
+        'role_id',
     ];
 
     /**
@@ -53,17 +54,17 @@ class User extends Authenticatable
 
     public function rank()
     {
-        return $this->hasOne(Rank::class);
+        return $this->belongsTo(Rank::class);
     }
 
     public function role()
     {
-        return $this->hasOne(Role::class);
+        return $this->belongsTo(Role::class);
     }
 
     public function drink()
     {
-        return $this->hasOne(Drink::class);
+        return $this->belongsTo(Drink::class, 'fav_drink_id');
     }
 
     public function event()

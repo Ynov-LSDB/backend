@@ -13,17 +13,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('firstName');
-            $table->string('lastName');
+            $table->string('firstname');
+            $table->string('lastname');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('imageURL_favBoules');
-            $table->string('nomFavBoules');
-            $table->integer('classement');
-            $table->date('birthDate');
-            $table->string('boissonPreferee');
-            $table->foreignIdFor(\App\Models\User::class, 'doublette_userId')->nullable();
+            $table->string('imageURL_fav_balls');
+            $table->string('fav_balls_name');
+            $table->integer('rank_id');
+            $table->date('birth_date');
+            $table->foreignIdFor(\App\Models\Drink::class, 'fav_drink_id')->nullable();
+            $table->foreignIdFor(\App\Models\User::class, 'doublette_user_id')->nullable();
+            $table->string('status');
             $table->rememberToken();
             $table->timestamps();
         });

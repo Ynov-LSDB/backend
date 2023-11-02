@@ -26,8 +26,8 @@ class DatabaseSeeder extends Seeder
         Role::Factory()->count(5)->create();
         Drink::Factory()->count(5)->create();
         Event::Factory()->count(3)->create();
-        User::Factory()->count(10)->create();
+        User::Factory()->count(20)->create();
         DrinkEvent::Factory()->count(10)->create();
-        UserEvent::Factory()->count(20)->create();
+        UserEvent::Factory()->count(30)->create();
     }
 }

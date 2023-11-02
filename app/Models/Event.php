@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Event extends Model
 {
@@ -27,13 +28,13 @@ class Event extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function drink()
+    public function drinks(): HasManyThrough
     {
-        return $this->belongsToMany(Drink::class);
+        return $this->hasManyThrough(Drink::class, DrinkEvent::class, 'event_id', 'id', 'id', 'drink_id');
     }
 
-    public function user()
+    public function users() : HasManyThrough
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasManyThrough(User::class, UserEvent::class, 'event_id', 'id', 'id', 'user_id');
     }
 }

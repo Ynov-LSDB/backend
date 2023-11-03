@@ -30,25 +30,25 @@ class AuthController extends Controller
             ], 400);
         }
 
-            //create user
-            $user = new User();
-            $user->firstname = $request->input('firstname');
-            $user->lastname = $request->input('lastname');
-            $user->birth_date = $request->input('birth_date');
-            $user->email = $request->input('email');
+        //create user
+        $user = new User();
+        $user->firstname = $request->input('firstname');
+        $user->lastname = $request->input('lastname');
+        $user->birth_date = $request->input('birth_date');
+        $user->email = $request->input('email');
 
-            //hash password before saving
-            $plainPassword = $request->input('password');
-            $user->password = app('hash')->make($plainPassword);
+        //hash password before saving
+        $plainPassword = $request->input('password');
+        $user->password = app('hash')->make($plainPassword);
 
-            $user->save();
-            // dd($user);
-            //return successful response
-            return response()->json([
-                'success' => true,
-                'message' => 'User created successfully',
-                'data' => $user
-            ], 200);
+        $user->save();
+        // dd($user);
+        //return successful response
+        return response()->json([
+            'success' => true,
+            'message' => 'User created successfully',
+            'data' => $user
+        ], 200);
     }
 
     public function login(Request $request)
@@ -77,7 +77,7 @@ class AuthController extends Controller
         }
 
         if (Hash::check($request->input('password'), $user->password)) {
-            $token = bin2hex(random_bytes(40));
+            $token = $user->createToken('auth_token')->plainTextToken;
             $user->remember_token = $token;
             $user->save();
 
@@ -98,12 +98,24 @@ class AuthController extends Controller
         }
     }
 
-    public function me(Request $request)
+    public function me()
     {
-        dd($request->user());
+        $user = auth()->user();
         return response()->json([
-            'success' => false,
-            'message' => 'User not found'
-        ], 400);
+            'success' => true,
+            'message' => 'User found',
+            'data' => $user
+        ], 200);
+    }
+
+    public function logout()
+    {
+        $user = auth()->user();
+        $user->tokens()->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'User logout',
+            'data' => $user
+        ], 200);
     }
 }

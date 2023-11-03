@@ -29,14 +29,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum')->name('me');
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
 
 //All routes for UserController
-Route::get('/users', [UserController::class, 'index']);
-Route::get('/user/{id}', [UserController::class, 'show']);
-Route::post('/user', [UserController::class, 'store']);
-Route::delete('/user/{id}', [UserController::class, 'destroy']);
-Route::put('/user/{id}', [UserController::class, 'update']);
+Route::get('/users', [UserController::class, 'index'])->middleware('auth:sanctum');
+Route::get('/user/{id}', [UserController::class, 'show'])->middleware('auth:sanctum');
+Route::post('/user', [UserController::class, 'store'])->middleware('auth:sanctum');
+Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth:sanctum');
+Route::put('/user/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');
 
 //All routes for EventController
 Route::get('/events', [EventController::class, 'index']);

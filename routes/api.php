@@ -29,18 +29,21 @@ Route::get('/users', [UserController::class, 'index']);
 Route::get('/user/{id}', [UserController::class, 'show']);
 Route::post('/user', [UserController::class, 'store']);
 Route::delete('/user/{id}', [UserController::class, 'destroy']);
+Route::put('/user/{id}', [UserController::class, 'update']);
 
 //All routes for EventController
 Route::get('/events', [EventController::class, 'index']);
 Route::get('/event/{id}', [EventController::class, 'show']);
 Route::post('/event', [EventController::class, 'store']);
 Route::delete('/event/{id}', [EventController::class, 'destroy']);
+Route::put('/event/{id}', [EventController::class, 'update']);
 
 //All routes for DrinkController
 Route::get('/drinks', [DrinkController::class, 'index']);
 Route::get('/drink/{id}', [DrinkController::class, 'show']);
 Route::post('/drink', [DrinkController::class, 'store']);
 Route::delete('/drink/{id}', [DrinkController::class, 'destroy']);
+Route::put('/drink/{id}', [DrinkController::class, 'update']);
 
 //All routes for Role
 Route::get('/roles', [RoleController::class, 'index']);

@@ -68,4 +68,28 @@ class DrinkController extends Controller
             'message' => 'Drink deleted',
         ], 200);
     }
+
+    public function update($id, Request $request)
+    {
+        $drink = Drink::find($id);
+        if (!$drink) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Drink not found'
+            ], 400);
+        }
+        $drink->title = $request->title;
+        $drink->description = $request->description;
+        $drink->degree = $request->degree;
+        $drink->imageURL = $request->imageURL;
+        $drink->is_cuite_possible = $request->is_cuite_possible;
+        $drink->nbr_ice_max = $request->nbr_ice_max;
+        $drink->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Drink updated',
+            'data' => $drink
+        ], 200);
+    }
 }

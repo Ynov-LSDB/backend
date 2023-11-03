@@ -56,4 +56,20 @@ class EventController extends Controller
             'data' => $event
         ], 200);
     }
+
+    public function destroy($id)
+    {
+        $event = Event::find($id);
+        if (!$event) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Event not found'
+            ], 400);
+        }
+        $event->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Event deleted'
+        ], 200);
+    }
 }

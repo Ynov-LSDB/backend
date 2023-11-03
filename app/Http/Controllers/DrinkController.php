@@ -65,7 +65,7 @@ class DrinkController extends Controller
         $drink->delete();
         return response()->json([
             'success' => true,
-            'message' => 'Drink deleted'
+            'message' => 'Drink deleted',
         ], 200);
     }
 }

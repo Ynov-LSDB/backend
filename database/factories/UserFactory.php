@@ -32,10 +32,12 @@ class UserFactory extends Factory
             'birth_date' => $this->faker->date(),
             'fav_drink_id' => Drink::all()->random()->id,
             'doublette_user_id' => null,
+            'triplette_id' => null,
+            'quadrette_id' => null,
             'status' => "OK",
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
-            'role_id' => Role::all()->random()->id,
+            'role_id' => 2,
         ];
     }
 
@@ -51,11 +53,16 @@ class UserFactory extends Factory
 
     public function configure() {
         return $this->afterCreating(function (User $user) {
+            //add doublette
             $doublette = User::all()->random()->id;
             while ($doublette == $user->id) {
                 $doublette = User::all()->random()->id;
             }
             $user->doublette_user_id = $doublette;
+
+            //add admin
+            $user->role_id = $user->id == 1 ? 1 : $user->role_id;
+            $user->email = $user->id == 1 ? "admin@admin.fr" : $user->email;
             $user->save();
         });
     }

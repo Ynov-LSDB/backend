@@ -108,7 +108,7 @@ class EventController extends Controller
     public function last()
     {
         //by created at
-        $event = Event::with('category')->orderBy('created_at', 'desc')->first();
+        $event = Event::with('category')->where('status', '=','À venir')->orderBy('created_at', 'desc')->first();
         if (!$event) {
             return response()->json([
                 'success' => false,

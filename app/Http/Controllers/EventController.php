@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DrinkEvent;
 use App\Models\Event;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 
 class EventController extends Controller
 {
+
+    public function __construct()
+    {
+        //
+    }
+
     public function index()
     {
         $events = Event::with('category')->get();
@@ -66,9 +72,8 @@ class EventController extends Controller
                 'message' => 'Event not found'
             ], 400);
         }
-
+        $this->authorize('update', $event);
         $updated = $event->fill($request->all())->save();
-
         if ($updated) {
             return response()->json([
                 'success' => true,
@@ -83,7 +88,7 @@ class EventController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function delete($id)
     {
         $event = Event::find($id);
         if (!$event) {
@@ -92,6 +97,7 @@ class EventController extends Controller
                 'message' => 'Event not found'
             ], 400);
         }
+        $this->authorize('delete', $event);
         $event->delete();
         return response()->json([
             'success' => true,

@@ -62,7 +62,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'User not created'
-            ], 400);
+            ], 500);
         }
     }
 
@@ -75,7 +75,7 @@ class UserController extends Controller
                 'message' => 'User not found'
             ], 400);
         }
-
+        $this->authorize('delete', $user);
         if ($user->delete()) {
             return response()->json([
                 'success' => true,
@@ -100,6 +100,7 @@ class UserController extends Controller
             ], 400);
         }
 
+        $this->authorize('update', [$user, $id]);
         $updated = $user->fill($request->all())->save();
 
         if ($updated) {

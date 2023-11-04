@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('registered_limit');
             $table->string('team_style');
             $table->string('status');
+            $table->foreignIdFor(\App\Models\User::class,'creator_id');
             $table->timestamps();
         });
     }

@@ -20,11 +20,11 @@ return new class extends Migration
             $table->string('password');
             $table->string('imageURL_fav_balls')->nullable();
             $table->string('fav_balls_name')->nullable();
-            $table->integer('rank_id')->default(1);
+            $table->foreignIdFor(App\Models\Rank::class,'rank_id')->default(1);
             $table->date('birth_date');
             $table->foreignIdFor(\App\Models\Drink::class, 'fav_drink_id')->nullable();
             $table->foreignIdFor(\App\Models\User::class, 'doublette_user_id')->nullable();
-            $table->foreignIdFor(\App\Models\Role::class, 'role_id')->nullable();
+            $table->foreignIdFor(\App\Models\Role::class, 'role_id')->default(1);
             $table->string('status')->default('OK');
             $table->rememberToken();
             $table->timestamps();

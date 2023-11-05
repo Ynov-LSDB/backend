@@ -31,7 +31,7 @@ class UserFactory extends Factory
             'birth_date' => $this->faker->date(),
             'fav_drink_id' => Drink::all()->random()->id,
             'doublette_user_id' => $this->faker->numberBetween(1, 10),
-            'status' => $this->faker->word(),
+            'status' => "OK",
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
             'role_id' => Role::all()->random()->id,

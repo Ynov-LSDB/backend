@@ -3,6 +3,14 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use App\Models\Category;
+use App\Models\Drink;
+use App\Models\Event;
+use App\Models\Rank;
+use App\Models\Role;
+use App\Models\User;
+use App\Policies\EventPolicy;
+use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -13,7 +21,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        // event
+        Event::class => EventPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**
@@ -21,6 +31,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
     }
 }

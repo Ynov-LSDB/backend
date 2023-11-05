@@ -77,6 +77,10 @@ class AuthController extends Controller
         }
 
         if (Hash::check($request->input('password'), $user->password)) {
+            if ($user->tokens()->exists()) {
+                $user->tokens()->delete();
+            }
+
             $token = $user->createToken('auth_token')->plainTextToken;
             $user->remember_token = $token;
             $user->save();

@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DrinkEvent;
 use App\Models\Event;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 
 class EventController extends Controller
 {
+
+    public function __construct()
+    {
+        //
+    }
+
     public function index()
     {
         $events = Event::with('category')->get();
@@ -38,6 +44,15 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'title' => 'required|string',
+            'date' => 'required|date',
+            'price' => 'numeric',
+            'category_id' => 'exists:categories,id',
+            'is_food_on_site' => 'boolean',
+            'registered_limit' => 'integer',
+            'creator_id' => 'exists:users,id',
+        ]);
         $event = new Event();
         $event->title = $request->title;
         $event->date = $request->date;
@@ -66,9 +81,15 @@ class EventController extends Controller
                 'message' => 'Event not found'
             ], 400);
         }
-
+        $this->validate($request, [
+            'date' => 'date',
+            'price' => 'numeric',
+            'category_id' => 'exists:categories,id',
+            'is_food_on_site' => 'boolean',
+            'registered_limit' => 'integer',
+        ]);
+        $this->authorize('update', $event);
         $updated = $event->fill($request->all())->save();
-
         if ($updated) {
             return response()->json([
                 'success' => true,
@@ -83,7 +104,7 @@ class EventController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function delete($id)
     {
         $event = Event::find($id);
         if (!$event) {
@@ -92,6 +113,7 @@ class EventController extends Controller
                 'message' => 'Event not found'
             ], 400);
         }
+        $this->authorize('delete', $event);
         $event->delete();
         return response()->json([
             'success' => true,

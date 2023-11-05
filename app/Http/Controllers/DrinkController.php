@@ -37,6 +37,12 @@ class DrinkController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'title' => 'required',
+            'degree' => 'numeric',
+            'is_cuite_possible' => 'boolean',
+            'nbr_ice_max' => 'integer',
+        ]);
         $drink = new Drink();
         $drink->title = $request->title;
         $drink->description = $request->description;
@@ -78,6 +84,11 @@ class DrinkController extends Controller
                 'message' => 'Drink not found'
             ], 400);
         }
+        $this->validate($request, [
+            'degree' => 'numeric',
+            'is_cuite_possible' => 'boolean',
+            'nbr_ice_max' => 'integer',
+        ]);
         $drink->title = $request->title;
         $drink->description = $request->description;
         $drink->degree = $request->degree;

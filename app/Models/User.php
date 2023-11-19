@@ -71,9 +71,4 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(Event::class, UserEvent::class, 'user_id', 'id', 'id', 'event_id');
     }
-
-    public function isAdmin()
-    {
-        return $this->role->name == 'admin';
-    }
 }

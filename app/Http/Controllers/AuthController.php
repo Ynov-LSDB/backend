@@ -78,16 +78,10 @@ class AuthController extends Controller
         ], 400);
     }
 
-    // Vérification du mot de passe
-    if (Hash::check($request->input('password'), $user->password)) {
-        // Création du jeton d'accès
-        $token = $user->createToken('auth_token')->plainTextToken;
-        $user->remember_token = $token;
-        $user->save();
-
-        // Validation du token côté serveur
-        $sanctumUser = $user->fresh(); // Charger l'utilisateur fraîchement pour s'assurer que les dernières modifications sont prises en compte
-        $sanctumUserFromToken = $request->user();
+        if (Hash::check($request->input('password'), $user->password)) {
+            $token = $user->createToken('auth_token')->plainTextToken;
+            $user->remember_token = $token;
+            $user->save();
 
         if ($sanctumUser->id !== $sanctumUserFromToken->id) {
             // Les identifiants d'utilisateur ne correspondent pas, le token n'est pas valide

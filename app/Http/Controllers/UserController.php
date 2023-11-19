@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -40,18 +39,6 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $user = new User();
-        $this->validate($request, [
-            'firstname' => 'required|string',
-            'lastname' => 'required|string',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
-            'confirm_password' => 'required|same:password',
-            'rank_id' => 'exists:ranks,id',
-            'birth_date' => 'required|date',
-            'fav_drink_id' => 'exists:drinks,id',
-            'doublette_user_id' => 'exists:users,id',
-            'role_id' => 'exists:roles,id',
-        ]);
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
         $user->email = $request->email;
@@ -75,7 +62,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'User not created'
-            ], 500);
+            ], 400);
         }
     }
 
@@ -88,7 +75,7 @@ class UserController extends Controller
                 'message' => 'User not found'
             ], 400);
         }
-        $this->authorize('delete', $user);
+
         if ($user->delete()) {
             return response()->json([
                 'success' => true,
@@ -105,31 +92,14 @@ class UserController extends Controller
     public function update($id, Request $request)
     {
         $user = User::find($id);
+
         if (!$user) {
             return response()->json([
                 'success' => false,
                 'message' => 'User not found'
             ], 400);
         }
-        $this->validate($request, [
-            'email' => 'email|unique:users,email,' . $id,
-            'password' => 'min:8',
-            'confirm_password' => 'same:password',
-            'birth_date' => 'date',
-            'rank_id' => 'exists:ranks,id',
-            'fav_drink_id' => 'exists:drinks,id',
-            'doublette_user_id' => 'exists:users,id',
-            'role_id' => [
-                'exists:roles,id',
-                function ($attribute, $value, $fail) {
-                    if (!auth()->user()->isAdmin()) {
-                        $fail("Vous n'avez pas le droit de modifier le rôle.");
-                    }
-                },
-            ],
-        ]);
 
-        $this->authorize('update', [$user, $id]);
         $updated = $user->fill($request->all())->save();
 
         if ($updated) {

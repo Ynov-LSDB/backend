@@ -52,8 +52,7 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-{
-    // Validation des données de requête
+    {
     $validators = Validator::make($request->all(), [
         'email' => 'required|email',
         'password' => 'required|min:8',
@@ -67,8 +66,7 @@ class AuthController extends Controller
         ], 400);
     }
 
-    // Récupération de l'utilisateur par email
-    $user = User::where('email', $request->input('email'))->first();
+        $user = User::where('email', $request->input('email'))->first();
 
     if (!$user) {
         return response()->json([

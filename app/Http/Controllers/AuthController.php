@@ -83,15 +83,6 @@ class AuthController extends Controller
             $user->remember_token = $token;
             $user->save();
 
-        if ($sanctumUser->id !== $sanctumUserFromToken->id) {
-            // Les identifiants d'utilisateur ne correspondent pas, le token n'est pas valide
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid token',
-                'data' => null
-            ], 401);
-        }
-
         return response()->json([
             'success' => true,
             'message' => 'Login success',

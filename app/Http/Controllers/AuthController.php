@@ -53,51 +53,54 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-    $validators = Validator::make($request->all(), [
-        'email' => 'required|email',
-        'password' => 'required|min:8',
-    ]);
+        $validators = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|min:8',
+        ]);
 
-    if ($validators->fails()) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Validation error',
-            'data' => $validators->errors()
-        ], 400);
-    }
+        if ($validators->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error',
+                'data' => $validators->errors()
+            ], 400);
+        }
 
         $user = User::where('email', $request->input('email'))->first();
 
-    if (!$user) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Login failed',
-            'data' => 'User not found'
-        ], 400);
-    }
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Login failed',
+                'data' => 'User not found'
+            ], 400);
+        }
 
         if (Hash::check($request->input('password'), $user->password)) {
+            if ($user->tokens()->exists()) {
+                $user->tokens()->delete();
+            }
+
             $token = $user->createToken('auth_token')->plainTextToken;
             $user->remember_token = $token;
             $user->save();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Login success',
-            'data' => [
-                'user' => $user,
-                'token' => $token
-            ]
-        ], 200);
-    } else {
-        // Mot de passe incorrect
-        return response()->json([
-            'success' => false,
-            'message' => 'Login failed',
-            'data' => 'Wrong password'
-        ], 400);
+            return response()->json([
+                'success' => true,
+                'message' => 'Login success',
+                'data' => [
+                    'user' => $user,
+                    'token' => $token
+                ]
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Login failed',
+                'data' => 'Wrong password'
+            ], 400);
+        }
     }
-}
 
     public function me()
     {

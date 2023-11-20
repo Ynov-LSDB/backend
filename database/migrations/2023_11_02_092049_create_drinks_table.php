@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('drinks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description')->nullable();
-            $table->float('degree')->default(0);
-            $table->string('imageURL')->nullable();
-            $table->boolean('is_cuite_possible')->nullable();
-            $table->integer('nbr_ice_max')->nullable();
+            $table->string('description');
+            $table->float('degree');
+            $table->string('imageURL');
+            $table->boolean('is_cuite_possible');
+            $table->integer('nbr_ice_max');
             $table->timestamps();
         });
     }

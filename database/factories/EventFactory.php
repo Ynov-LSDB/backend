@@ -20,6 +20,7 @@ class EventFactory extends Factory
     public function definition(): array
     {
         $teamstyle = ['doublette', 'triplette', 'quadrette', 'tete tete'];
+        $status = ['À venir', 'En cours', 'Terminé', 'Annulé', 'Reporté', 'Supprimé'];
         return [
             'title' => $this->faker->name(),
             'date' => $this->faker->dateTime(),
@@ -29,7 +30,8 @@ class EventFactory extends Factory
             'is_food_on_site' => $this->faker->boolean(),
             'registered_limit' => $this->faker->numberBetween(0, 100),
             'team_style' => $teamstyle[array_rand($teamstyle)],
-            'status' => $this->faker->word(),
+            'status' => $status[array_rand($status)],
+            'creator_id' => User::all()->random()->id,
         ];
     }
 }

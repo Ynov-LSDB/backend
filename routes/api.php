@@ -28,18 +28,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Auth routes for Sanctum
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register']);
-Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum')->name('me');
-Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
+Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');                            // auth
+Route::get('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');                    // auth
 
 //All routes for UserController
-Route::get('/users', [UserController::class, 'index'])->middleware('auth:sanctum');
-Route::get('/user/{id}', [UserController::class, 'show'])->middleware('auth:sanctum');
-Route::post('/user', [UserController::class, 'store'])->middleware('auth:sanctum');
-Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth:sanctum');
-Route::put('/user/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');
+Route::get('/users', [UserController::class, 'index']);
+Route::get('/user/nextEvent', [UserController::class, 'nextEvent'])->middleware('auth:sanctum');         // auth
+Route::get('/user/{id}', [UserController::class, 'show']);
+Route::post('/user', [UserController::class, 'store'])->middleware(['auth:sanctum', 'admin']);                      // auth && admin
+Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth:sanctum');             // auth && (admin || user_id == id)
+Route::put('/user/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');                 // auth && (admin || user_id == id)
 
 //All routes for EventController
 Route::get('/events', [EventController::class, 'index']);
+Route::get('/event/last', [EventController::class, 'last']);
 Route::get('/event/{id}', [EventController::class, 'show']);
 Route::post('/event', [EventController::class, 'store']);
 Route::delete('/event/{id}', [EventController::class, 'destroy']);

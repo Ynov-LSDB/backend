@@ -19,7 +19,7 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = User::with(['role', 'rank', 'drink', 'events', 'doublette'])->find($id);
+        $user = User::with(['role', 'rank', 'drink', 'events', 'doublette', 'triplette', 'quadrette'])->find($id);
 
         if (!$user) {
             return response()->json([
@@ -122,7 +122,6 @@ class UserController extends Controller
         $userId = auth()->user()->id;
         // affiche le prochain event auquel l'utilisateur participe
         $user = User::with(['events'])->find($userId);
-        // get the first by date
         $nextEvent = $user['events']->sortBy('date')->last();
         if (!$nextEvent) {
             return response()->json([

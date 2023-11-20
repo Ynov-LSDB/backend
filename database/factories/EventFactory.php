@@ -20,7 +20,7 @@ class EventFactory extends Factory
     public function definition(): array
     {
         $teamstyle = ['doublette', 'triplette', 'quadrette', 'tete tete'];
-        $status = ['À venir', 'En cours', 'Terminé', 'Annulé', 'Reporté', 'Supprimé'];
+        $status = ['À venir', 'En cours', 'Terminé', 'Annulé', 'Supprimé'];
         return [
             'title' => $this->faker->name(),
             'date' => $this->faker->dateTime(),

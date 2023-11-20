@@ -20,7 +20,7 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = User::with(['role', 'rank', 'drink', 'events'])->find($id);
+        $user = User::with(['role', 'rank', 'drink', 'events', 'doublette'])->find($id);
 
         if (!$user) {
             return response()->json([
@@ -144,5 +144,23 @@ class UserController extends Controller
                 'message' => 'User not updated'
             ], 500);
         }
+    }
+
+    public function nextEvent()
+    {
+        $user = auth()->user();
+        $event = $user->events()->where('date', '>', now())->first();
+        if (!$event) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No next event found',
+                'data' => null
+            ], 400);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Next event found',
+            'data' => $event
+        ], 200);
     }
 }

@@ -67,6 +67,10 @@ class User extends Authenticatable
         return $this->belongsTo(Drink::class, 'fav_drink_id');
     }
 
+    public function doublette() {
+        return $this->belongsTo(User::class, 'doublette_user_id');
+    }
+
     public function events()
     {
         return $this->hasManyThrough(Event::class, UserEvent::class, 'user_id', 'id', 'id', 'event_id');

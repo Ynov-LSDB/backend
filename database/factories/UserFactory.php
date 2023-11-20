@@ -32,7 +32,7 @@ class UserFactory extends Factory
             'birth_date' => $this->faker->date(),
             'fav_drink_id' => Drink::all()->random()->id,
             'doublette_user_id' => null,
-            'status' => $this->faker->word(),
+            'status' => "OK",
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
             'role_id' => Role::all()->random()->id,
@@ -47,5 +47,16 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function configure() {
+        return $this->afterCreating(function (User $user) {
+            $doublette = User::all()->random()->id;
+            while ($doublette == $user->id) {
+                $doublette = User::all()->random()->id;
+            }
+            $user->doublette_user_id = $doublette;
+            $user->save();
+        });
     }
 }

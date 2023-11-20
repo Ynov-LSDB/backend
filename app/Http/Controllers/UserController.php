@@ -148,19 +148,22 @@ class UserController extends Controller
 
     public function nextEvent()
     {
-        $user = auth()->user();
-        $event = $user->events()->where('date', '>', now())->first();
-        if (!$event) {
+        $userId = auth()->user()->id;
+        // affiche le prochain event auquel l'utilisateur participe
+        $user = User::with(['events'])->find($userId);
+        // get the first by date
+        $nextEvent = $user['events']->sortBy('date')->last();
+        if (!$nextEvent) {
             return response()->json([
-                'success' => false,
-                'message' => 'No next event found',
+                'success' => true,
+                'message' => 'No event found',
                 'data' => null
             ], 400);
         }
         return response()->json([
             'success' => true,
             'message' => 'Next event found',
-            'data' => $event
+            'data' => $nextEvent
         ], 200);
     }
 }

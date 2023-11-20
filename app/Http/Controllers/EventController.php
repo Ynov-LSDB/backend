@@ -120,4 +120,22 @@ class EventController extends Controller
             'message' => 'Event deleted'
         ], 200);
     }
+
+    public function last()
+    {
+        //by created at
+        $event = Event::with('category')->orderBy('created_at', 'desc')->first();
+        if (!$event) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Event not found'
+            ], 400);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => 'Event found',
+                'data' => $event
+            ], 200);
+        }
+    }
 }

@@ -155,13 +155,17 @@ class UserController extends Controller
         $updated = $user->save();
 
         if ($updated) {
-            if ($oldImageProfile != $user->imageURL_profile && $oldImageProfile) {
-                Storage::disk('s3')->delete($oldImageProfile);
+            if ($oldImageProfile != $user->imageURL_profile) {
+                if ($oldImageProfile) {
+                    Storage::disk('s3')->delete($oldImageProfile);
+                }
                 $user->imageURL_profile = $s3->temporaryUrl($pathProfile, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
 
             }
-            if ($oldImageFavBalls != $user->imageURL_fav_balls && $oldImageFavBalls) {
-                Storage::disk('s3')->delete($oldImageFavBalls);
+            if ($oldImageFavBalls != $user->imageURL_fav_balls) {
+                if ($oldImageFavBalls) {
+                    Storage::disk('s3')->delete($oldImageFavBalls);
+                }
                 $user->imageURL_fav_balls = $s3->temporaryUrl($pathFavBalls, now()->addMinutes(5));
             }
 

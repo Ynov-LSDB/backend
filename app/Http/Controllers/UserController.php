@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserEvent;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -195,5 +196,46 @@ class UserController extends Controller
             'message' => 'Next event found',
             'data' => $nextEvent
         ], 200);
+    }
+
+    public function inEvent()
+    {
+        $userId = auth()->user()->id;
+        // affiche tous les events dans lesquel l'utilisateur participe
+        $user = User::with(['events'])->find($userId);
+        $events = $user['events'];
+        if (!$events) {
+            return response()->json([
+                'success' => true,
+                'message' => 'No event found',
+                'data' => null
+            ], 400);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => count($events) . ' event(s) found',
+                'data' => $events
+            ], 200);
+        }
+    }
+
+    public function notInEvent()
+    {
+        $userId = auth()->user()->id;
+        // affiche tous les events dans lesquel l'utilisateur ne participe pas
+        $events = UserEvent::with(['event'])->where('user_id', '!=', $userId)->get();
+        if (!$events) {
+            return response()->json([
+                'success' => true,
+                'message' => 'No event found',
+                'data' => null
+            ], 400);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => count($events) . ' event(s) found',
+                'data' => $events
+            ], 200);
+        }
     }
 }

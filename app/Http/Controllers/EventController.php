@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -53,8 +54,10 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $creatorId = auth()->user()->id;
+        $categoryId = Category::where('id', $request->input('category_id'))->first();
         $event = new Event($request->all());
         $event->creator_id = $creatorId;
+        $event->category_id = $categoryId->id;
         $event->save();
         return response()->json([
             'success' => true,

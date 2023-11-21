@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DrinkController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\CategoryController;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +38,7 @@ Route::get('/user/nextEvent', [UserController::class, 'nextEvent'])->middleware(
 Route::get('/user/{id}', [UserController::class, 'show']);
 Route::post('/user', [UserController::class, 'store'])->middleware(['auth:sanctum', 'admin']);                      // auth && admin
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth:sanctum');             // auth && (admin || user_id == id)
-Route::put('/user/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');                 // auth && (admin || user_id == id)
+Route::post('/user/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');                 // auth && (admin || user_id == id)
 
 //All routes for EventController
 Route::get('/events', [EventController::class, 'index']);
@@ -74,3 +75,13 @@ Route::get('/rank/{id}', [RankController::class, 'show']);
 Route::post('/rank', [RankController::class, 'store'])->middleware(['auth:sanctum', 'admin']);                      // auth && admin
 Route::delete('/rank/{id}', [RankController::class, 'destroy'])->middleware(['auth:sanctum', 'admin']);             // auth && admin
 Route::put('/rank/{id}', [RankController::class, 'update'])->middleware(['auth:sanctum', 'admin']);                 // auth && admin
+
+Route::get('/test', function () {
+    $res = Storage::disk('s3')->get('shrek2.jpeg');
+    $res->getURL();
+    return response()->json([
+        'success' => true,
+        'message' => $res,
+        'data' => 'test'
+    ], 200);
+});

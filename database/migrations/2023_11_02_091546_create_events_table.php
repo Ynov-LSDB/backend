@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->text('description')->nullable();
             $table->dateTime('date');
+            $table->text('imageURL')->nullable();
             $table->float('price');
             $table->foreignIdFor(\App\Models\Category::class, 'category_id')->default(0);
             $table->string('adresse');
@@ -22,6 +24,7 @@ return new class extends Migration
             $table->integer('registered_limit');
             $table->string('team_style');
             $table->string('status')->default('OK')->nullable();
+            $table->foreignIdFor(\App\Models\User::class,'creator_id');
             $table->timestamps();
         });
     }

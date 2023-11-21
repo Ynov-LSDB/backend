@@ -23,11 +23,14 @@ class User extends Authenticatable
         'email',
         'password',
         'imageURL_fav_balls',
+        'imageURL_profile',
         'fav_balls_name',
         'rank_id',
         'birth_date',
         'fav_drink_id',
         'doublette_user_id',
+        'triplette_id',
+        'quadrette_id',
         'status',
         'role_id',
     ];
@@ -67,8 +70,25 @@ class User extends Authenticatable
         return $this->belongsTo(Drink::class, 'fav_drink_id');
     }
 
+    public function doublette() {
+        return $this->belongsTo(User::class, 'doublette_user_id');
+    }
+
+    public function triplette() {
+        return $this->hasManyThrough(Triplette::class, 'triplette_id');
+    }
+
+    public function quadrette() {
+        return $this->hasManyThrough(Quadrette::class, 'quadrette_id');
+    }
+
     public function events()
     {
         return $this->hasManyThrough(Event::class, UserEvent::class, 'user_id', 'id', 'id', 'event_id');
+    }
+
+    public function isAdmin()
+    {
+        return $this->role->name == 'admin';
     }
 }

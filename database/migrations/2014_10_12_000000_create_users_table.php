@@ -18,12 +18,15 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('imageURL_fav_balls')->nullable();
+            $table->text('imageURL_fav_balls')->nullable();
+            $table->text('imageURL_profile')->nullable();
             $table->string('fav_balls_name')->nullable();
             $table->integer('rank_id')->default(1);
             $table->date('birth_date');
             $table->foreignIdFor(\App\Models\Drink::class, 'fav_drink_id')->nullable();
             $table->foreignIdFor(\App\Models\User::class, 'doublette_user_id')->nullable();
+            $table->foreignIdFor(\App\Models\Triplette::class, 'triplette_id')->nullable();
+            $table->foreignIdFor(\App\Models\Quadrette::class, 'quadrette_id')->nullable();
             $table->foreignIdFor(\App\Models\Role::class, 'role_id')->nullable();
             $table->string('status')->default('OK');
             $table->rememberToken();

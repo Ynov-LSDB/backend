@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_events', function (Blueprint $table) {
+        Schema::create('triplettes', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\User::class);
-            $table->foreignIdFor(\App\Models\Event::class);
+            $table->foreignId('creator_user_id_1')->constrained('users'); //creator
+            $table->foreignId('user_id_2')->constrained('users')->nullable();
+            $table->foreignId('user_id_3')->constrained('users')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_event');
+        Schema::dropIfExists('triplette');
     }
 };

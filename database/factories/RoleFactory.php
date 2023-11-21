@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,16 @@ class RoleFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word(),
+            'name' => "user"
         ];
+    }
+
+    public function configure() {
+        //just the first one
+
+        return $this->afterCreating(function (Role $role) { // just the first one
+            $role->name = $role->id == 1 ? 'admin' : $role->name;
+            $role->save();
+        });
     }
 }

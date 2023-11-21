@@ -223,7 +223,16 @@ class UserController extends Controller
     {
         $userId = auth()->user()->id;
         // affiche tous les events dans lesquel l'utilisateur ne participe pas
-        $events = UserEvent::with(['event'])->where('user_id', '!=', $userId)->get();
+        $events = UserEvent::with(['event'])
+            ->where('user_id', '!=', $userId)
+            ->groupBy('event_id')
+            ->selectRaw('event_id')
+            ->get();
+        // le format est différent de inEvent car on a un tableau de UserEvent et non de Event
+        foreach ($events as $event) {
+            $data[] = $event['event'];
+        }
+
         if (!$events) {
             return response()->json([
                 'success' => true,
@@ -234,7 +243,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => count($events) . ' event(s) found',
-                'data' => $events
+                'data' => $data
             ], 200);
         }
     }

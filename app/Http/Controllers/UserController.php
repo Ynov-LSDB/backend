@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -66,7 +68,8 @@ class UserController extends Controller
         }
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $user = User::find($id);
 
         if (!$user) {
@@ -92,7 +95,6 @@ class UserController extends Controller
     public function update($id, Request $request)
     {
         $user = User::find($id);
-
         if (!$user) {
             return response()->json([
                 'success' => false,
@@ -101,9 +103,46 @@ class UserController extends Controller
         }
 
         $this->authorize('update', [$user, $id]);
-        $updated = $user->fill($request->all())->save();
+
+        $oldImageProfile = $user->imageURL_profile;
+        $oldImageFavBalls = $user->imageURL_fav_balls;
+
+        $user->fill($request->all());
+        if ($user->isDirty('imageURL_profile')) {
+            $file = $request->file('imageURL_profile');
+            $extension = $file->getClientOriginalExtension();
+            $pathProfile = time() . '_Profile.' . $extension;
+            //$file = Image::make($file)->resize(1200, 360)->encode($extension)->save(); // resize image
+            //Storage::disk('s3')->put($path, $file);
+            $s3 = Storage::disk('s3');
+            $s3->put($pathProfile, file_get_contents($file));
+            $user->imageURL_profile = $pathProfile;
+        }
+
+        if ($user->isDirty('imageURL_fav_balls')) {
+            $file = $request->file('imageURL_fav_balls');
+            $extension = $file->getClientOriginalExtension();
+            $pathFavBalls = time() . '_FavBalls.' . $extension;
+            //$file = Image::make($file)->resize(1200, 360)->encode($extension)->save(); // resize image
+            //Storage::disk('s3')->put($path, $file);
+            $s3 = Storage::disk('s3');
+            $s3->put($pathFavBalls, file_get_contents($file));
+            $user->imageURL_fav_balls = $pathFavBalls;
+        }
+
+        $updated = $user->save();
 
         if ($updated) {
+            if ($oldImageProfile != $user->imageURL_profile && $oldImageProfile) {
+                Storage::disk('s3')->delete($oldImageProfile);
+                $user->imageURL_profile = $s3->temporaryUrl($pathProfile, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+
+            }
+            if ($oldImageFavBalls != $user->imageURL_fav_balls && $oldImageFavBalls) {
+                Storage::disk('s3')->delete($oldImageFavBalls);
+                $user->imageURL_fav_balls = $s3->temporaryUrl($pathFavBalls, now()->addMinutes(5));
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'User updated',

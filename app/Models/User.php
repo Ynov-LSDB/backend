@@ -33,6 +33,7 @@ class User extends Authenticatable
         'quadrette_id',
         'status',
         'role_id',
+        'score',
     ];
 
     /**

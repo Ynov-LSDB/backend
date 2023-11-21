@@ -45,15 +45,7 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $event = new Event();
-        $event->title = $request->title;
-        $event->date = $request->date;
-        $event->price = $request->price;
-        $event->category_id = $request->category_id;
-        $event->adresse = $request->adresse;
-        $event->is_food_on_site = $request->is_food_on_site;
-        $event->registered_limit = $request->registered_limit;
-        $event->team_style = $request->team_style;
-        $event->status = $request->status;
+        $event->fill($request->all());
         $event->save();
 
         return response()->json([

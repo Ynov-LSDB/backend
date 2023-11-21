@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->text('description')->nullable();
             $table->dateTime('date');
             $table->float('price');
             $table->foreignIdFor(\App\Models\Category::class, 'category_id')->nullable();

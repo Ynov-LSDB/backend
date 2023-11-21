@@ -23,6 +23,7 @@ class EventFactory extends Factory
         $status = ['À venir', 'En cours', 'Terminé', 'Annulé', 'Supprimé'];
         return [
             'title' => $this->faker->name(),
+            'description' => $this->faker->text(500),
             'date' => $this->faker->dateTime(),
             'price' => $this->faker->numberBetween(0, 100),
             'category_id' => Category::all()->random()->id,

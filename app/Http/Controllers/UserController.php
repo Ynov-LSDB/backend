@@ -22,7 +22,7 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = User::with(['role', 'rank', 'drink', 'events', 'doublette', 'triplette', 'quadrette'])->find($id);
+        $user = User::with(['role', 'rank', 'drink', 'events', 'doublette'])->find($id);
 
         if (!$user) {
             return response()->json([

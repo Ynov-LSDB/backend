@@ -14,6 +14,7 @@ class Event extends Model
         'title',
         'description',
         'date',
+        'imageURL',
         'price',
         'category',
         'adresse',

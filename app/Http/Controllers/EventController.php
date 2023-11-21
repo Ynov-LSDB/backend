@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 
 class EventController extends Controller
@@ -18,6 +19,11 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::with('category')->get();
+        foreach ($events as $event) {
+            if ($event->imageURL) {
+                $event->imageURL = Storage::disk('s3')->temporaryUrl($event->imageURL, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+            }
+        }
         return response()->json([
             'success' => true,
             'message' =>count($events) . " events found",
@@ -34,7 +40,9 @@ class EventController extends Controller
                 'message' => 'Event not found'
             ], 400);
         }
-
+        if ($event->imageURL) {
+            $event->imageURL = Storage::disk('s3')->temporaryUrl($event->imageURL, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+        }
         return response()->json([
             'success' => true,
             'message' => 'Event found',
@@ -44,10 +52,10 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-        $event = new Event();
-        $event->fill($request->all());
+        $creatorId = auth()->user()->id;
+        $event = new Event($request->all());
+        $event->creator_id = $creatorId;
         $event->save();
-
         return response()->json([
             'success' => true,
             'message' => 'Event created',
@@ -65,8 +73,28 @@ class EventController extends Controller
             ], 400);
         }
         $this->authorize('update', $event);
-        $updated = $event->fill($request->all())->save();
+        $oldImage = $event->imageURL;
+
+        $event->fill($request->all());
+
+        if ($event->isDirty('imageURL')) {
+            $file = $request->file('imageURL');
+            $extension = $file->getClientOriginalExtension();
+            $pathProfile = time() . '_Event.' . $extension;
+            //$file = Image::make($file)->resize(1200, 360)->encode($extension)->save(); // resize image
+            //Storage::disk('s3')->put($path, $file);
+            $s3 = Storage::disk('s3');
+            $s3->put($pathProfile, file_get_contents($file));
+            $event->imageURL = $pathProfile;
+        }
+        $updated = $event->save();
         if ($updated) {
+            if ($oldImage != $event->imageURL) {
+                if ($oldImage) {
+                    Storage::disk('s3')->delete($oldImage);
+                }
+                $event->imageURL = $s3->temporaryUrl($pathProfile, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+            }
             return response()->json([
                 'success' => true,
                 'message' => 'Event updated',
@@ -107,6 +135,9 @@ class EventController extends Controller
                 'message' => 'Event not found'
             ], 400);
         } else {
+            if ($event->imageURL) {
+                $event->imageURL = Storage::disk('s3')->temporaryUrl($event->imageURL, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+            }
             return response()->json([
                 'success' => true,
                 'message' => 'Event found',

@@ -16,14 +16,14 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->dateTime('date');
+            $table->text('imageURL')->nullable();
             $table->float('price');
             $table->foreignIdFor(\App\Models\Category::class, 'category_id')->nullable();
-            $table->text('imageURL')->nullable();
             $table->string('adresse');
             $table->boolean('is_food_on_site');
             $table->integer('registered_limit');
             $table->string('team_style');
-            $table->string('status');
+            $table->string('status')->default('OK');
             $table->foreignIdFor(\App\Models\User::class,'creator_id');
             $table->timestamps();
         });

@@ -160,7 +160,6 @@ class UserController extends Controller
                     Storage::disk('s3')->delete($oldImageProfile);
                 }
                 $user->imageURL_profile = $s3->temporaryUrl($pathProfile, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
-
             }
             if ($oldImageFavBalls != $user->imageURL_fav_balls) {
                 if ($oldImageFavBalls) {
@@ -195,6 +194,9 @@ class UserController extends Controller
                 'data' => null
             ], 400);
         }
+        if ($nextEvent->imageURL) {
+            $nextEvent->imageURL = Storage::disk('s3')->temporaryUrl($nextEvent->imageURL, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+        }
         return response()->json([
             'success' => true,
             'message' => 'Next event found',
@@ -208,6 +210,11 @@ class UserController extends Controller
         // affiche tous les events dans lesquel l'utilisateur participe
         $user = User::with(['events'])->find($userId);
         $events = $user['events'];
+        foreach ($events as $event) {
+            if ($event->imageURL) {
+                $event->imageURL = Storage::disk('s3')->temporaryUrl($event->imageURL, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+            }
+        }
         if (!$events) {
             return response()->json([
                 'success' => true,
@@ -235,6 +242,9 @@ class UserController extends Controller
         // le format est différent de inEvent car on a un tableau de UserEvent et non de Event
         foreach ($events as $event) {
             $data[] = $event['event'];
+            if ($event['event']->imageURL) {
+                $event['event']->imageURL = Storage::disk('s3')->temporaryUrl($event['event']->imageURL, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+            }
         }
 
         if (!$events) {

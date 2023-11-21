@@ -313,4 +313,14 @@ class UserController extends Controller
             ], 200);
         }
     }
+
+    public function getRankingPaginate()
+    {
+        $users = User::orderBy('score', 'desc')->paginate(25);
+        return response()->json([
+            'success' => true,
+            'message' => 'OK',
+            'data' => $users
+        ], 200);
+    }
 }

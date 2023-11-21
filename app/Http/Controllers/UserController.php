@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserEvent;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -37,24 +38,36 @@ class UserController extends Controller
         ], 200);
     }
 
-    //create a new user
     public function store(Request $request)
     {
         $user = new User();
-        $user->firstname = $request->firstname;
-        $user->lastname = $request->lastname;
-        $user->email = $request->email;
-        $user->password = $request->password;
-        $user->imageURL_fav_balls = $request->imageURL_fav_balls;
-        $user->fav_balls_name = $request->fav_balls_name;
-        $user->rank_id = $request->rank_id;
-        $user->birth_date = $request->birth_date;
-        $user->fav_drink_id = $request->fav_drink_id;
-        $user->doublette_user_id = $request->doublette_user_id;
-        $user->status = $request->status;
-        $user->role_id = $request->role_id;
+        $user->fill($request->all());
+        if ($user->isDirty('imageURL_profile')) {
+            $file = $request->file('imageURL_profile');
+            $extension = $file->getClientOriginalExtension();
+            $pathProfile = time() . '_Profile.' . $extension;
+            $s3 = Storage::disk('s3');
+            $s3->put($pathProfile, file_get_contents($file));
+            $user->imageURL_profile = $pathProfile;
+        }
 
-        if ($user->save()) {
+        if ($user->isDirty('imageURL_fav_balls')) {
+            $file = $request->file('imageURL_fav_balls');
+            $extension = $file->getClientOriginalExtension();
+            $pathFavBalls = time() . '_FavBalls.' . $extension;
+            $s3 = Storage::disk('s3');
+            $s3->put($pathFavBalls, file_get_contents($file));
+            $user->imageURL_fav_balls = $pathFavBalls;
+        }
+
+        $created = $user->save();
+        if ($created) {
+            if ($user->imageURL_profile) {
+                $user->imageURL_profile = $s3->temporaryUrl($pathProfile, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+            }
+            if ($user->imageURL_fav_balls) {
+                $user->imageURL_fav_balls = $s3->temporaryUrl($pathFavBalls, now()->addMinutes(5));
+            }
             return response()->json([
                 'success' => true,
                 'message' => 'User created',
@@ -79,7 +92,16 @@ class UserController extends Controller
             ], 400);
         }
         $this->authorize('delete', $user);
-        if ($user->delete()) {
+        $image_profile = $user->imageURL_profile;
+        $image_fav_balls = $user->imageURL_fav_balls;
+        $deleted = $user->delete();
+        if ($deleted) {
+            if ($image_profile) {
+                Storage::disk('s3')->delete($image_profile);
+            }
+            if ($image_fav_balls) {
+                Storage::disk('s3')->delete($image_fav_balls);
+            }
             return response()->json([
                 'success' => true,
                 'message' => 'User deleted'
@@ -174,5 +196,46 @@ class UserController extends Controller
             'message' => 'Next event found',
             'data' => $nextEvent
         ], 200);
+    }
+
+    public function inEvent()
+    {
+        $userId = auth()->user()->id;
+        // affiche tous les events dans lesquel l'utilisateur participe
+        $user = User::with(['events'])->find($userId);
+        $events = $user['events'];
+        if (!$events) {
+            return response()->json([
+                'success' => true,
+                'message' => 'No event found',
+                'data' => null
+            ], 400);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => count($events) . ' event(s) found',
+                'data' => $events
+            ], 200);
+        }
+    }
+
+    public function notInEvent()
+    {
+        $userId = auth()->user()->id;
+        // affiche tous les events dans lesquel l'utilisateur ne participe pas
+        $events = UserEvent::with(['event'])->where('user_id', '!=', $userId)->get();
+        if (!$events) {
+            return response()->json([
+                'success' => true,
+                'message' => 'No event found',
+                'data' => null
+            ], 400);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => count($events) . ' event(s) found',
+                'data' => $events
+            ], 200);
+        }
     }
 }

@@ -29,7 +29,6 @@ class EventFactory extends Factory
             'is_food_on_site' => $this->faker->boolean(),
             'registered_limit' => $this->faker->numberBetween(0, 100),
             'team_style' => $teamstyle[array_rand($teamstyle)],
-            'status' => $this->faker->word(),
         ];
     }
 }

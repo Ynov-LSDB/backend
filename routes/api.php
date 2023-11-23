@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');                            // auth
-Route::get('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');                    // auth
+Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');                    // auth
 
 //All routes for UserController
 Route::get('/users', [UserController::class, 'index']);
@@ -77,13 +77,3 @@ Route::get('/rank/{id}', [RankController::class, 'show']);
 Route::post('/rank', [RankController::class, 'store'])->middleware(['auth:sanctum', 'admin']);                      // auth && admin
 Route::delete('/rank/{id}', [RankController::class, 'destroy'])->middleware(['auth:sanctum', 'admin']);             // auth && admin
 Route::put('/rank/{id}', [RankController::class, 'update'])->middleware(['auth:sanctum', 'admin']);                 // auth && admin
-
-Route::get('/test', function () {
-    $res = Storage::disk('s3')->get('shrek2.jpeg');
-    $res->getURL();
-    return response()->json([
-        'success' => true,
-        'message' => $res,
-        'data' => 'test'
-    ], 200);
-});

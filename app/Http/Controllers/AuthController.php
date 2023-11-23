@@ -54,7 +54,13 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validators = Validator::make($request->all(), [
+            /**
+             * @example "admin@admin.fr"
+             */
             'email' => 'required|email',
+            /**
+             * @example "password"
+             */
             'password' => 'required|min:8',
         ]);
 

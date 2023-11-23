@@ -90,6 +90,7 @@ class AuthController extends Controller
 
             $token = $user->createToken('auth_token')->plainTextToken;
             $user->remember_token = $token;
+            $user->refresh_token = $token;
             $user->save();
 
             return response()->json([

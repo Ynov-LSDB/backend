@@ -153,10 +153,10 @@ class UserController extends Controller
         }
 
         if ($user->isDirty('fav_drink_id') && $user->fav_drink_id == 0) {
-            $user->fav_drink_id()->null();
+            $user->fav_drink_id = null;
         }
         if ($user->isDirty('doublette_user_id') && $user->doublette_user_id == 0) {
-            $user->doublette_user_id()->null();
+            $user->doublette_user_id = null;
         }
 
         $updated = $user->save();

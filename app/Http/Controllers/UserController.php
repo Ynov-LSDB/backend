@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('role', 'rank', 'drink')->get();
+        $users = User::with(['role', 'rank', 'drink', 'events', 'doublette'])->get();
         return response()->json([
             'success' => true,
             'message' => 'OK',
@@ -116,7 +116,7 @@ class UserController extends Controller
 
     public function update($id, Request $request)
     {
-        $user = User::find($id);
+        $user = User::with(['role', 'rank', 'drink', 'events', 'doublette'])->find($id);
         if (!$user) {
             return response()->json([
                 'success' => false,

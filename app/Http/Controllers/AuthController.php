@@ -110,7 +110,8 @@ class AuthController extends Controller
 
     public function me()
     {
-        $user = auth()->user();
+        $id = auth()->user()->id;
+        $user = User::with(['role', 'rank', 'drink', 'events', 'doublette'])->find($id);
         return response()->json([
             'success' => true,
             'message' => 'User found',

@@ -251,7 +251,6 @@ class UserController extends Controller
             ->groupBy('event_id')
             ->selectRaw('event_id')
             ->get();
-        // le format est différent de inEvent car on a un tableau de UserEvent et non de Event
         foreach ($events as $event) {
             $data[] = $event['event'];
             if ($event['event']->imageURL) {

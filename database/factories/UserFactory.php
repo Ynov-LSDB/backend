@@ -36,7 +36,9 @@ class UserFactory extends Factory
             'quadrette_id' => null,
             'status' => "OK",
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10)
+            'remember_token' => Str::random(10),
+            'role_id' => 2,
+            'score' => random_int(0, 9999),
         ];
     }
 

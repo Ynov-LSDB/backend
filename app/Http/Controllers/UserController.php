@@ -273,6 +273,31 @@ class UserController extends Controller
         }
     }
 
+    public function getRankingPaginate(Request $request)
+    {
+        $users = User::select('id', 'firstname', 'lastname', 'score')->orderBy('score', 'desc')->paginate($request->get('size'));
+        return response()->json([
+            'success' => true,
+            'message' => 'OK',
+            'data' => $users
+        ], 200);
+    }
+
+    public function weeklyScoreReduction()
+    {
+        $users = User::all();
+
+        foreach ($users as $user) {
+            $user->score = $user->score * 0.95;
+            $user->save();
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'All users score reduced by 5%',
+        ], 200);
+    }
+
     public function joinEvent($id)
     {
         $userId = auth()->user()->id;

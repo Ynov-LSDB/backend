@@ -42,6 +42,7 @@ Route::post('/user', [UserController::class, 'store'])->middleware(['auth:sanctu
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth:sanctum');             // auth && (admin || user_id == id)
 Route::post('/user/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');                 // auth && (admin || user_id == id)
 Route::get('/users/ranking', [UserController::class, 'getRankingPaginate']);
+Route::get('/users/ranking/weekly-reduction', [UserController::class, 'weeklyScoreReduction']);           // auth
 
 //All routes for EventController
 Route::get('/events', [EventController::class, 'index']);

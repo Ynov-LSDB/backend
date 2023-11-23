@@ -18,7 +18,7 @@ return new class extends Migration
             $table->dateTime('date');
             $table->text('imageURL')->nullable();
             $table->float('price');
-            $table->foreignIdFor(\App\Models\Category::class, 'category_id')->default(0);
+            $table->foreignIdFor(\App\Models\Category::class, 'category_id')->nullable();
             $table->string('adresse');
             $table->boolean('is_food_on_site');
             $table->integer('registered_limit');

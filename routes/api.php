@@ -41,6 +41,8 @@ Route::get('/user/{id}', [UserController::class, 'show']);
 Route::post('/user', [UserController::class, 'store'])->middleware(['auth:sanctum', 'admin']);                      // auth && admin
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth:sanctum');             // auth && (admin || user_id == id)
 Route::post('/user/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');                 // auth && (admin || user_id == id)
+Route::get('/user/joinEvent/{id}', [UserController::class, 'joinEvent'])->middleware('auth:sanctum');     // auth
+Route::get('/user/leaveEvent/{id}', [UserController::class, 'leaveEvent'])->middleware('auth:sanctum'); // auth
 
 //All routes for EventController
 Route::get('/events', [EventController::class, 'index']);

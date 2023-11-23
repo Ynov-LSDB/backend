@@ -59,7 +59,7 @@ class UserController extends Controller
             $s3->put($pathFavBalls, file_get_contents($file));
             $user->imageURL_fav_balls = $pathFavBalls;
         }
-
+        $user->role()->associate(2);
         $created = $user->save();
         if ($created) {
             if ($user->imageURL_profile) {
@@ -150,6 +150,13 @@ class UserController extends Controller
             $s3 = Storage::disk('s3');
             $s3->put($pathFavBalls, file_get_contents($file));
             $user->imageURL_fav_balls = $pathFavBalls;
+        }
+
+        if ($user->isDirty('fav_drink_id') && $user->fav_drink_id == 0) {
+            $user->fav_drink_id()->null();
+        }
+        if ($user->isDirty('doublette_user_id') && $user->doublette_user_id == 0) {
+            $user->doublette_user_id()->null();
         }
 
         $updated = $user->save();
@@ -258,6 +265,47 @@ class UserController extends Controller
                 'success' => true,
                 'message' => count($events) . ' event(s) found',
                 'data' => $data
+            ], 200);
+        }
+    }
+
+    public function joinEvent($id)
+    {
+        $userId = auth()->user()->id;
+        $user = User::with(['events'])->find($userId);
+        if ($user['events']->find($id) != null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User already in event',
+                'data' => null
+            ], 400);
+        } else {
+            UserEvent::create([
+                'user_id' => $userId,
+                'event_id' => $id
+            ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'User joined event',
+            ], 200);
+        }
+    }
+
+    public function leaveEvent($id)
+    {
+        $userId = auth()->user()->id;
+        $user = User::with(['events'])->find($userId);
+        if ($user['events']->find($id) == null) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not in event',
+                'data' => null
+            ], 400);
+        } else {
+            UserEvent::where('user_id', $userId)->where('event_id', $id)->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'User left event',
             ], 200);
         }
     }

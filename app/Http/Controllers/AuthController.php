@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -40,7 +41,7 @@ class AuthController extends Controller
         //hash password before saving
         $plainPassword = $request->input('password');
         $user->password = app('hash')->make($plainPassword);
-
+        $user->role()->associate(2);
         $user->save();
         // dd($user);
         //return successful response
@@ -112,6 +113,14 @@ class AuthController extends Controller
     {
         $id = auth()->user()->id;
         $user = User::with(['role', 'rank', 'drink', 'events', 'doublette'])->find($id);
+        if ($user->imageURL_profile) {
+            $user->imageURL_profile = Storage::disk('s3')->temporaryUrl($user->imageURL_profile, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+
+        }
+        if ($user->imageURL_fav_balls) {
+            $user->imageURL_fav_balls = Storage::disk('s3')->temporaryUrl($user->imageURL_fav_balls, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+
+        }
         return response()->json([
             'success' => true,
             'message' => 'User found',

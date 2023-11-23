@@ -32,7 +32,8 @@ class DatabaseSeeder extends Seeder
         Event::Factory()->count(10)->create();
         DrinkEvent::Factory()->count(10)->create();
         UserEvent::Factory()->count(30)->create();
-        Triplette::Factory()->count(50)->create();
-        Quadrette::Factory()->count(5)->create();
+        // les triplettes et quadrettes sont pour plus tard
+        //Triplette::Factory()->count(50)->create();
+        //Quadrette::Factory()->count(5)->create();
     }
 }

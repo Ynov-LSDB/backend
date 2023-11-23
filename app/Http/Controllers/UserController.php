@@ -277,13 +277,13 @@ class UserController extends Controller
         $users = User::all();
 
         foreach ($users as $user) {
-            $user->score = $user->score * 0.9;
+            $user->score = $user->score * 0.95;
             $user->save();
         }
-        
+
         return response()->json([
             'success' => true,
-            'message' => 'All users score reduced by 10%',
+            'message' => 'All users score reduced by 5%',
         ], 200);
     }
 }

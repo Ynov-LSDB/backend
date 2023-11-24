@@ -264,13 +264,21 @@ class UserController extends Controller
 
     public function getRankingPaginate(Request $request)
     {
-        $users = User::select('id', 'firstname', 'lastname', 'score')->orderBy('score', 'desc')->paginate($request->get('size'));
+        $query = User::select('id', 'firstname', 'lastname', 'score')->orderBy('score', 'desc');
+
+        if ($request->has('size')) {
+            $users = $query->paginate($request->get('size'));
+        } else {
+            $users = $query->get();
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'OK',
             'data' => $users
         ], 200);
     }
+
 
     public function weeklyScoreReduction()
     {

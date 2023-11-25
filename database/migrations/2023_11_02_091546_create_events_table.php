@@ -20,7 +20,7 @@ return new class extends Migration
             $table->float('price');
             $table->foreignIdFor(\App\Models\Category::class, 'category_id')->nullable();
             $table->string('adresse');
-            $table->boolean('is_food_on_site');
+            $table->boolean('is_food_on_site')->default(false);
             $table->integer('registered_limit');
             $table->string('team_style');
             $table->string('status')->default('OK')->nullable();

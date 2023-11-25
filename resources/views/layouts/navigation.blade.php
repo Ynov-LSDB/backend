@@ -15,8 +15,23 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+                    <x-nav-link :href="route('user.index')" :active="request()->routeIs('user.index')">
                         {{ __('Utilisateurs') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('event.index')" :active="request()->routeIs('event.index')">
+                        {{ __('Évènements') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('drink.index')" :active="request()->routeIs('drink.index')">
+                        {{ __('Boissons') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('rank.index')" :active="request()->routeIs('rank.index')">
+                        {{ __('Ranks') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('role.index')" :active="request()->routeIs('role.index')">
+                        {{ __('Roles') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.index')">
+                        {{ __('Categories') }}
                     </x-nav-link>
                 </div>
             </div>

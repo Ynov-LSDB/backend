@@ -54,10 +54,10 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $creatorId = auth()->user()->id;
-        $categoryId = Category::where('id', $request->input('category_id'))->first();
-        $event = new Event($request->all());
+        $event = new Event();
+        $event->fill($request->all());
         $event->creator_id = $creatorId;
-        $event->category_id = $categoryId->id;
+        $event->status = $request->status ? $request->status : 'ok';
         $event->save();
         return response()->json([
             'success' => true,

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('imageURL');
             $table->boolean('is_cuite_possible');
             $table->integer('nbr_ice_max');
+            $table->string('status')->default('OK')->nullable();
             $table->timestamps();
         });
     }

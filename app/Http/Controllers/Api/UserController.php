@@ -167,16 +167,19 @@ class UserController extends Controller
                     Storage::disk('s3')->delete($oldImageProfile);
                 }
             }
-            if ($user->imageURL_profile) {
-                $user->imageURL_profile = $s3->temporaryUrl($pathProfile, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
-            }
-
             if ($oldImageFavBalls != $user->imageURL_fav_balls) {
                 if ($oldImageFavBalls) {
                     Storage::disk('s3')->delete($oldImageFavBalls);
                 }
             }
+
+            if ($user->imageURL_profile) {
+                $s3 = Storage::disk('s3');
+                $user->imageURL_profile = $s3->temporaryUrl($pathProfile, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+            }
+
             if ($user->imageURL_fav_balls) {
+                $s3 = Storage::disk('s3');
                 $user->imageURL_fav_balls = $s3->temporaryUrl($pathFavBalls, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
             }
 

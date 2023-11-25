@@ -7,7 +7,7 @@
 
     <script>
         function save() {
-            if (confirm(`modifier user {{$user->id}} ?`)) {
+            if (confirm(`modifier l'utilisateur {{$user->id}} ?`)) {
                 const userToken = "{{ auth()->user()->getRememberToken() }}";
                 $.ajax({
                     url: '/api/user/' + {{$user->id}},
@@ -85,31 +85,31 @@
                         <!-- Rank_id -->
                         <div class="mb-4">
                             <label for="rank_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Rank_id</label>
-                            <input type="text" name="rank_id" id="rank_id" value="{{ $user->rank_id }}" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+                            <input type="number" name="rank_id" id="rank_id" value="{{ $user->rank_id }}" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 
                         <!-- Birth_date -->
                         <div class="mb-4">
                             <label for="birth_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Birth_date</label>
-                            <input type="text" name="birth_date" id="birth_date" value="{{ $user->birth_date }}" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+                            <input type="date" name="birth_date" id="birth_date" value="{{ $user->birth_date }}" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 
                         <!-- Fav_drink_id -->
                         <div class="mb-4">
                             <label for="lastname" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Fav_drink_id</label>
-                            <input type="text" name="lastname" id="lastname" value="{{ $user->fav_drink_id }}" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+                            <input type="number" name="lastname" id="lastname" value="{{ $user->fav_drink_id }}" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 
                         <!-- Doublette_user_id -->
                         <div class="mb-4">
                             <label for="lastname" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Doublette_user_id</label>
-                            <input type="text" name="lastname" id="lastname" value="{{ $user->doublette_user_id }}" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+                            <input type="number" name="lastname" id="lastname" value="{{ $user->doublette_user_id }}" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 
                         <!-- Role_id -->
                         <div class="mb-4">
                             <label for="lastname" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Role_id</label>
-                            <input type="text" name="lastname" id="lastname" value="{{ $user->role_id }}" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+                            <input type="number" name="lastname" id="lastname" value="{{ $user->role_id }}" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 
                         <!-- Status -->

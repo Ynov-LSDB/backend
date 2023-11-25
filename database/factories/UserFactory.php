@@ -26,7 +26,6 @@ class UserFactory extends Factory
             'firstname' => $this->faker->firstName(),
             'lastname' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
-            'imageURL_fav_balls' => $this->faker->imageUrl(),
             'fav_balls_name' => $this->faker->word(),
             'rank_id' => Rank::all()->random()->id,
             'birth_date' => $this->faker->date(),

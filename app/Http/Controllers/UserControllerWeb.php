@@ -13,4 +13,11 @@ class UserControllerWeb extends Controller
             'users' => User::all()
         ]);
     }
+
+    public function edit($id)
+    {
+        return view('user.edit', [
+            'user' => User::findOrFail($id)
+        ]);
+    }
 }

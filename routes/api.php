@@ -34,14 +34,14 @@ Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 //All routes for UserController
 Route::get('/users', [UserController::class, 'index']);
 Route::get('/user/nextEvent', [UserController::class, 'nextEvent'])->middleware('auth:sanctum');         // auth
-Route::get('/user/inEvent', [UserController::class, 'inEvent'])->middleware('auth:sanctum');                    // auth
-Route::get('/user/notInEvent', [UserController::class, 'notInEvent'])->middleware('auth:sanctum');                 // auth
+Route::get('/user/inEvent', [UserController::class, 'inEvent'])->middleware('auth:sanctum');             // auth
+Route::get('/user/notInEvent', [UserController::class, 'notInEvent'])->middleware('auth:sanctum');       // auth
 Route::get('/user/{id}', [UserController::class, 'show']);
-Route::post('/user', [UserController::class, 'store'])->middleware(['auth:sanctum', 'admin']);                      // auth && admin
+Route::post('/user', [UserController::class, 'store'])->middleware(['auth:sanctum', 'admin']);                     // auth && admin
 Route::delete('/user/{id}', [UserController::class, 'destroy'])->middleware('auth:sanctum');             // auth && (admin || user_id == id)
-Route::post('/user/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');                 // auth && (admin || user_id == id)
-Route::get('/user/joinEvent/{id}', [UserController::class, 'joinEvent'])->middleware('auth:sanctum');     // auth
-Route::get('/user/leaveEvent/{id}', [UserController::class, 'leaveEvent'])->middleware('auth:sanctum'); // auth
+Route::post('/user/{id}', [UserController::class, 'update'])->middleware('auth:sanctum');                // auth && (admin || user_id == id)
+Route::get('/user/joinEvent/{id}', [UserController::class, 'joinEvent'])->middleware('auth:sanctum');    // auth
+Route::get('/user/leaveEvent/{id}', [UserController::class, 'leaveEvent'])->middleware('auth:sanctum');  // auth
 
 //All routes for EventController
 Route::get('/events', [EventController::class, 'index']);

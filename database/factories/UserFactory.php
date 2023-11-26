@@ -61,7 +61,10 @@ class UserFactory extends Factory
 
             //add admin
             $user->role_id = $user->id == 1 ? 1 : $user->role_id;
-            $user->email = $user->id == 1 ? "admin@admin.fr" : $user->email;
+            $user->email = $user->id == 1 ? "admin@admin" : $user->email;
+            //add user
+            $user->role_id = $user->id == 2 ? 2 : $user->role_id;
+            $user->email = $user->id == 2 ? "user@user" : $user->email;
             $user->save();
         });
     }

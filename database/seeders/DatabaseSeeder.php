@@ -28,8 +28,8 @@ class DatabaseSeeder extends Seeder
         Rank::Factory()->count(5)->create();
         Role::Factory()->count(2)->create();
         Drink::Factory()->count(50)->create();
-        User::Factory()->count(20)->create();
-        Event::Factory()->count(10)->create();
+        User::Factory()->count(5)->create();
+        Event::Factory()->count(20)->create();
         DrinkEvent::Factory()->count(10)->create();
         UserEvent::Factory()->count(30)->create();
         // les triplettes et quadrettes sont pour plus tard

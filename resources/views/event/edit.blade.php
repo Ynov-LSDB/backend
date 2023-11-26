@@ -90,13 +90,13 @@
 
                         <!-- Is_food_on_site -->
                         <div class="mb-4">
-                            <label for="is_food_on_site" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Is_food_on_site</label>
+                            <label for="is_food_on_site" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nourriture sur place ?</label>
                             <input type="checkbox" name="is_food_on_site" id="is_food_on_site" value="{{ $event->is_food_on_site }}" min="0" max="1" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 
                         <!-- Registered_limit -->
                         <div class="mb-4">
-                            <label for="registered_limit" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Registered_limit</label>
+                            <label for="registered_limit" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre maximum de bouliste</label>
                             <input type="number" name="registered_limit" id="registered_limit" value="{{ $event->registered_limit }}" min="0" max="1000" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 

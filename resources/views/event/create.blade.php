@@ -8,9 +8,7 @@
     <script>
         function save() {
             const userToken = "{{ auth()->user()->getRememberToken() }}";
-
-            // Créer un objet pour stocker les données non nulles
-            const data = {};
+            const data = {}; // Créer un objet pour stocker les données non nulles
 
             const addIfNotNull = (field, value) => {
                 if (value !== null && value !== undefined && value !== '') {
@@ -45,24 +43,27 @@
             addIfNotNull('creator_id', creator_id);
             addIfNotNull('status', status);
 
-            $.ajax({ // todo ca marche pas (http 500 / postman OK) je sais pas pourquoi je suis assis sur mon pouce carrement
+            if (Object.keys(data).length > 5) {
+            $.ajax({ // todo ca marche pas ( http 500 / postman OK / doc scramble OK) je sais pas pourquoi je suis assis sur mon pouce carrement
                 url: '/api/event',
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + userToken
                 },
                 data: data,
-                success: function (result) {
-                    console.log('success');
+                success: function () {
                     window.location.href = '/events';
                 },
                 error: function (result) {
                     console.log(result);
+                    console.log(data);
                     alert('error, watch console');
                 }
             });
+            } else {
+                alert('Veuillez remplir au moins les champs avec un astérisque.');
+            }
         }
-
     </script>
 
     <div class="py-12">
@@ -72,7 +73,7 @@
                     <form onsubmit=save()>
                         <!-- Title -->
                         <div class="mb-4">
-                            <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
+                            <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title *</label>
                             <input type="text" name="title" id="title" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 
@@ -84,7 +85,7 @@
 
                         <!-- Date -->
                         <div class="mb-4">
-                            <label for="date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date</label>
+                            <label for="date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date *</label>
                             <input type="datetime-local" name="date" id="date" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 
@@ -96,8 +97,8 @@
 
                         <!-- Price -->
                         <div class="mb-4">
-                            <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Price</label>
-                            <input type="text" name="price" id="price" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
+                            <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Price *</label>
+                            <input type="number" name="price" id="price" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 
                         <!-- Category_id -->
@@ -108,25 +109,25 @@
 
                         <!-- Adresse -->
                         <div class="mb-4">
-                            <label for="adresse" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Adresse</label>
+                            <label for="adresse" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Adresse *</label>
                             <input type="text" name="adresse" id="adresse" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 
                         <!-- Is_food_on_site -->
                         <div class="mb-4">
-                            <label for="is_food_on_site" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Is_food_on_site</label>
+                            <label for="is_food_on_site" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nourriture sur place ?</label>
                             <input type="checkbox" name="is_food_on_site" id="is_food_on_site" min="0" max="1" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 
                         <!-- Registered_limit -->
                         <div class="mb-4">
-                            <label for="registered_limit" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Registered_limit</label>
+                            <label for="registered_limit" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre maximum de bouliste *</label>
                             <input type="number" name="registered_limit" id="registered_limit" min="0" max="1000" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 
                         <!-- Team_style -->
                         <div class="mb-4">
-                            <label for="team_style" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Team_style</label>
+                            <label for="team_style" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Team_style *</label>
                             <input type="text" name="team_style" id="team_style" min="0" max="1000" class="mt-1 p-2 w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:shadow-outline-blue focus:border-blue-300">
                         </div>
 

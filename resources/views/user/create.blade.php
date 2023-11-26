@@ -48,7 +48,7 @@
             addIfNotNull('status', status);
 
             // Envoyer les données uniquement si au moins un champ est non nul
-            if (Object.keys(data).length > 5) {
+            if (Object.keys(data).length > 4) {
                 $.ajax({
                     url: '/api/user',
                     type: 'POST',

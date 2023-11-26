@@ -1,5 +1,15 @@
 <?php
 
+use App\Http\Controllers\CategoryControllerWeb;
+use App\Http\Controllers\DrinkControllerWeb;
+use App\Http\Controllers\DrinkEventControllerWeb;
+use App\Http\Controllers\EventControllerWeb;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RankControllerWeb;
+use App\Http\Controllers\RoleControllerWeb;
+use App\Http\Controllers\UserControllerWeb;
+use App\Http\Controllers\UserEventControllerWeb;
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +26,47 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::middleware(AdminMiddleware::class)->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/users', [UserControllerWeb::class, 'index'])->name('user.index');
+    Route::get('/userEdit/{id}', [UserControllerWeb::class, 'edit'])->name('user.edit');
+    Route::get('/userCreate', [UserControllerWeb::class, 'create'])->name('user.create');
+
+    Route::get('/events', [EventControllerWeb::class, 'index'])->name('event.index');
+    Route::get('/eventEdit/{id}', [EventControllerWeb::class, 'edit'])->name('event.edit');
+    Route::get('/eventCreate', [EventControllerWeb::class, 'create'])->name('event.create');
+
+    Route::get('/drinks', [DrinkControllerWeb::class, 'index'])->name('drink.index');
+    Route::get('/drinkEdit/{id}', [DrinkControllerWeb::class, 'edit'])->name('drink.edit');
+    Route::get('/drinkCreate', [DrinkControllerWeb::class, 'create'])->name('drink.create');
+
+    Route::get('/roles', [RoleControllerWeb::class, 'index'])->name('role.index');
+    Route::get('/roleEdit/{id}', [RoleControllerWeb::class, 'edit'])->name('role.edit');
+    Route::get('/roleCreate', [RoleControllerWeb::class, 'create'])->name('role.create');
+
+    Route::get('/ranks', [RankControllerWeb::class, 'index'])->name('rank.index');
+    Route::get('/rankEdit/{id}', [RankControllerWeb::class, 'edit'])->name('rank.edit');
+    Route::get('/rankCreate', [RankControllerWeb::class, 'create'])->name('rank.create');
+
+    Route::get('/categories', [CategoryControllerWeb::class, 'index'])->name('category.index');
+    Route::get('/categoryEdit/{id}', [CategoryControllerWeb::class, 'edit'])->name('category.edit');
+    Route::get('/categoryCreate', [CategoryControllerWeb::class, 'create'])->name('category.create');
+
+    Route::get('/userEvents', [UserEventControllerWeb::class, 'index'])->name('userEvent.index');
+    Route::get('/userEventEdit/{id}', [UserEventControllerWeb::class, 'edit'])->name('userEvent.edit');
+    Route::get('/userEventCreate', [UserEventControllerWeb::class, 'create'])->name('userEvent.create');
+
+    Route::get('/drinkEvents', [DrinkEventControllerWeb::class, 'index'])->name('drinkEvent.index');
+    Route::get('/drinkEventEdit/{id}', [DrinkEventControllerWeb::class, 'edit'])->name('drinkEvent.edit');
+    Route::get('/drinkEventCreate', [DrinkEventControllerWeb::class, 'create'])->name('drinkEvent.create');
+});
+
+require __DIR__.'/auth.php';

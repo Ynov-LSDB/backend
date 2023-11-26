@@ -39,12 +39,7 @@ class DrinkController extends Controller
     public function store(Request $request)
     {
         $drink = new Drink();
-        $drink->title = $request->title;
-        $drink->description = $request->description;
-        $drink->degree = $request->degree;
-        $drink->imageURL = $request->imageURL;
-        $drink->is_cuite_possible = $request->is_cuite_possible;
-        $drink->nbr_ice_max = $request->nbr_ice_max;
+        $drink->fill($request->all());
         $drink->save();
 
         return response()->json([

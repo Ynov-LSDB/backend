@@ -37,14 +37,14 @@
             addIfNotNull('price', price);
             addIfNotNull('category_id', category_id);
             addIfNotNull('adresse', adresse);
-            addIfNotNull('is_food_on_site', is_food_on_site);
+            addIfNotNull('is_food_on_site', is_food_on_site ? 1 : 0);
             addIfNotNull('registered_limit', registered_limit);
             addIfNotNull('team_style', team_style);
             addIfNotNull('creator_id', creator_id);
             addIfNotNull('status', status);
 
             if (Object.keys(data).length > 5) {
-            $.ajax({ // todo ca marche pas ( http 500 / postman OK / doc scramble OK) je sais pas pourquoi je suis assis sur mon pouce carrement
+            $.ajax({
                 url: '/api/event',
                 type: 'POST',
                 headers: {

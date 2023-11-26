@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('description');
             $table->float('degree');
-            $table->string('imageURL');
+            $table->string('imageURL')->nullable();
             $table->boolean('is_cuite_possible');
             $table->integer('nbr_ice_max');
             $table->string('status')->default('OK')->nullable();

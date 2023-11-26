@@ -127,17 +127,13 @@ class UserController extends Controller
 
         $this->authorize('update', [$user, $id]);
 
-        $oldImageProfile = $user->imageURL_profile;
-        $oldImageFavBalls = $user->imageURL_fav_balls;
+        $user->fill($request->except(['imageURL_profile', 'imageURL_fav_balls']));
+        $s3 = Storage::disk('s3');
 
-        $user->fill($request->all());
-        if ($user->isDirty('imageURL_profile')) {
+        if ($request->hasFile('imageURL_profile')) {
             $file = $request->file('imageURL_profile');
             $extension = $file->getClientOriginalExtension();
             $pathProfile = time() . '_Profile.' . $extension;
-            //$file = Image::make($file)->resize(1200, 360)->encode($extension)->save(); // resize image
-            //Storage::disk('s3')->put($path, $file);
-            $s3 = Storage::disk('s3');
             $s3->put($pathProfile, file_get_contents($file));
             $user->imageURL_profile = $pathProfile;
             if ($user->getOriginal('imageURL_profile')) {
@@ -145,13 +141,10 @@ class UserController extends Controller
             }
         }
 
-        if ($user->isDirty('imageURL_fav_balls')) {
+        if ($request->hasFile('imageURL_fav_balls')) {
             $file = $request->file('imageURL_fav_balls');
             $extension = $file->getClientOriginalExtension();
             $pathFavBalls = time() . '_FavBalls.' . $extension;
-            //$file = Image::make($file)->resize(1200, 360)->encode($extension)->save(); // resize image
-            //Storage::disk('s3')->put($path, $file);
-            $s3 = Storage::disk('s3');
             $s3->put($pathFavBalls, file_get_contents($file));
             $user->imageURL_fav_balls = $pathFavBalls;
             if ($user->getOriginal('imageURL_fav_balls')) {
@@ -159,35 +152,22 @@ class UserController extends Controller
             }
         }
 
-        if ($user->isDirty('fav_drink_id') && $user->fav_drink_id == 0) {
+        // Réinitialisez les valeurs à null si l'id est égal à 0
+        if ($user->fav_drink_id == 0) {
             $user->fav_drink_id = null;
         }
-        if ($user->isDirty('doublette_user_id') && $user->doublette_user_id == 0) {
+        if ($user->doublette_user_id == 0) {
             $user->doublette_user_id = null;
         }
 
         $updated = $user->save();
 
         if ($updated) {
-            if ($oldImageProfile != $user->imageURL_profile) {
-                if ($oldImageProfile) {
-                    Storage::disk('s3')->delete($oldImageProfile);
-                }
+            if ($request->hasFile('imageURL_profile')) {
+                $user->imageURL_profile = $s3->temporaryUrl($pathProfile, now()->addMinutes(5));
             }
-            if ($oldImageFavBalls != $user->imageURL_fav_balls) {
-                if ($oldImageFavBalls) {
-                    Storage::disk('s3')->delete($oldImageFavBalls);
-                }
-            }
-
-            if ($user->imageURL_profile) {
-                $s3 = Storage::disk('s3');
-                $user->imageURL_profile = $s3->temporaryUrl($pathProfile, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
-            }
-
-            if ($user->imageURL_fav_balls) {
-                $s3 = Storage::disk('s3');
-                $user->imageURL_fav_balls = $s3->temporaryUrl($pathFavBalls, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+            if ($request->hasFile('imageURL_fav_balls')) {
+                $user->imageURL_fav_balls = $s3->temporaryUrl($pathFavBalls, now()->addMinutes(5));
             }
 
             return response()->json([

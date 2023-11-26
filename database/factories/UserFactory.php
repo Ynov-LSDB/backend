@@ -26,7 +26,6 @@ class UserFactory extends Factory
             'firstname' => $this->faker->firstName(),
             'lastname' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
-            'imageURL_fav_balls' => $this->faker->imageUrl(),
             'fav_balls_name' => $this->faker->word(),
             'rank_id' => Rank::all()->random()->id,
             'birth_date' => $this->faker->date(),
@@ -37,7 +36,6 @@ class UserFactory extends Factory
             'status' => "OK",
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
-            'role_id' => 2,
             'score' => random_int(0, 9999),
         ];
     }
@@ -63,7 +61,10 @@ class UserFactory extends Factory
 
             //add admin
             $user->role_id = $user->id == 1 ? 1 : $user->role_id;
-            $user->email = $user->id == 1 ? "admin@admin.fr" : $user->email;
+            $user->email = $user->id == 1 ? "admin@admin" : $user->email;
+            //add user
+            $user->role_id = $user->id == 2 ? 2 : $user->role_id;
+            $user->email = $user->id == 2 ? "user@user" : $user->email;
             $user->save();
         });
     }

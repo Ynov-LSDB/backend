@@ -1,84 +1,84 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\Rank;
+use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
-class RankController extends Controller
+class RoleController extends Controller
 {
     public function index()
     {
-        $ranks = Rank::all();
+        $roles = Role::all();
         return response()->json([
             'success' => true,
-            'message' =>count($ranks) . " ranks found",
-            'data' => $ranks
+            'message' =>count($roles) . " roles found",
+            'data' => $roles
         ], 200);
     }
 
     public function show($id)
     {
-        $rank = Rank::find($id);
-        if (!$rank) {
+        $role = Role::find($id);
+        if (!$role) {
             return response()->json([
                 'success' => false,
-                'message' => 'Rank not found'
+                'message' => 'Role not found'
             ], 400);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Rank found',
-            'data' => $rank
+            'message' => 'Role found',
+            'data' => $role
         ], 200);
     }
 
     public function store(Request $request)
     {
-        $rank = new Rank();
-        $rank->name = $request->name;
-        $rank->save();
+        $role = new Role();
+        $role->name = $request->name;
+        $role->save();
 
         return response()->json([
             'success' => true,
-            'message' => 'Rank created',
-            'data' => $rank
+            'message' => 'Role created',
+            'data' => $role
         ], 200);
     }
 
     public function destroy($id)
     {
-        $rank = Rank::find($id);
-        if (!$rank) {
+        $role = Role::find($id);
+        if (!$role) {
             return response()->json([
                 'success' => false,
-                'message' => 'Rank not found'
+                'message' => 'Role not found'
             ], 400);
         }
-        $rank->delete();
+        $role->delete();
         return response()->json([
             'success' => true,
-            'message' => 'Rank deleted',
-            'data' => $rank
+            'message' => 'Role deleted',
         ], 200);
     }
 
     public function update(Request $request, $id)
     {
-        $rank = Rank::find($id);
-        if (!$rank) {
+        $role = Role::find($id);
+        if (!$role) {
             return response()->json([
                 'success' => false,
-                'message' => 'Rank not found'
+                'message' => 'Role not found'
             ], 400);
         }
-        $rank->name = $request->name;
-        $rank->save();
+        $role->name = $request->name;
+        $role->save();
         return response()->json([
             'success' => true,
-            'message' => 'Rank updated',
-            'data' => $rank
+            'message' => 'Role updated',
+            'data' => $role
         ], 200);
     }
 }

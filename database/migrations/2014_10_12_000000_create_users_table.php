@@ -30,6 +30,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Role::class, 'role_id')->nullable();
             $table->string('status')->default('OK');
             $table->integer('score')->default(0);
+            $table->string('refresh_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

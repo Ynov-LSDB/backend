@@ -3,10 +3,12 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DrinkController;
+use App\Http\Controllers\Api\DrinkEventController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\RankController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UserEventController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -54,27 +56,37 @@ Route::post('/event/{id}', [EventController::class, 'update'])->middleware('auth
 //All routes for DrinkController
 Route::get('/drinks', [DrinkController::class, 'index']);
 Route::get('/drink/{id}', [DrinkController::class, 'show']);
-Route::post('/drink', [DrinkController::class, 'store'])->middleware(['auth:sanctum', 'admin']);                    // auth && admin
-Route::delete('/drink/{id}', [DrinkController::class, 'destroy'])->middleware(['auth:sanctum', 'admin']);           // auth && admin
-Route::put('/drink/{id}', [DrinkController::class, 'update'])->middleware(['auth:sanctum', 'admin']);               // auth && admin
+Route::post('/drink', [DrinkController::class, 'store'])->middleware(['auth:sanctum', 'admin']);                   // auth && admin
+Route::delete('/drink/{id}', [DrinkController::class, 'destroy'])->middleware(['auth:sanctum', 'admin']);          // auth && admin
+Route::put('/drink/{id}', [DrinkController::class, 'update'])->middleware(['auth:sanctum', 'admin']);              // auth && admin
 
 //All routes for Role
 Route::get('/roles', [RoleController::class, 'index']);
 Route::get('/role/{id}', [RoleController::class, 'show']);
-Route::post('/role', [RoleController::class, 'store'])->middleware(['auth:sanctum', 'admin']);                      // auth && admin
-Route::delete('/role/{id}', [RoleController::class, 'destroy'])->middleware(['auth:sanctum', 'admin']);             // auth && admin
-Route::put('/role/{id}', [RoleController::class, 'update'])->middleware(['auth:sanctum', 'admin']);                 // auth && admin
+Route::post('/role', [RoleController::class, 'store'])->middleware(['auth:sanctum', 'admin']);                     // auth && admin
+Route::delete('/role/{id}', [RoleController::class, 'destroy'])->middleware(['auth:sanctum', 'admin']);            // auth && admin
+Route::put('/role/{id}', [RoleController::class, 'update'])->middleware(['auth:sanctum', 'admin']);                // auth && admin
 
 //All routes for Category
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/category/{id}', [CategoryController::class, 'show']);
-Route::post('/category', [CategoryController::class, 'store'])->middleware(['auth:sanctum', 'admin']);              // auth && admin
-Route::delete('/category/{id}', [CategoryController::class, 'destroy'])->middleware(['auth:sanctum', 'admin']);     // auth && admin
-Route::put('/category/{id}', [CategoryController::class, 'update'])->middleware(['auth:sanctum', 'admin']);         // auth && admin
+Route::post('/category', [CategoryController::class, 'store'])->middleware(['auth:sanctum', 'admin']);             // auth && admin
+Route::delete('/category/{id}', [CategoryController::class, 'destroy'])->middleware(['auth:sanctum', 'admin']);    // auth && admin
+Route::put('/category/{id}', [CategoryController::class, 'update'])->middleware(['auth:sanctum', 'admin']);        // auth && admin
 
 //All routes for rank
 Route::get('/ranks', [RankController::class, 'index']);
 Route::get('/rank/{id}', [RankController::class, 'show']);
-Route::post('/rank', [RankController::class, 'store'])->middleware(['auth:sanctum', 'admin']);                      // auth && admin
-Route::delete('/rank/{id}', [RankController::class, 'destroy'])->middleware(['auth:sanctum', 'admin']);             // auth && admin
-Route::put('/rank/{id}', [RankController::class, 'update'])->middleware(['auth:sanctum', 'admin']);                 // auth && admin
+Route::post('/rank', [RankController::class, 'store'])->middleware(['auth:sanctum', 'admin']);                     // auth && admin
+Route::delete('/rank/{id}', [RankController::class, 'destroy'])->middleware(['auth:sanctum', 'admin']);            // auth && admin
+Route::put('/rank/{id}', [RankController::class, 'update'])->middleware(['auth:sanctum', 'admin']);                // auth && admin
+
+//All routes for UserEvent
+Route::get('/userEvents', [UserEventController::class, 'index'])->middleware(['auth:sanctum', 'admin']);           // auth && admin
+Route::post('/userEvent', [UserEventController::class, 'store'])->middleware(['auth:sanctum', 'admin']);           // auth && admin
+Route::delete('/userEvent/{id}', [UserEventController::class, 'delete'])->middleware(['auth:sanctum', 'admin']);   // auth && admin
+
+//All routes for DrinkEvent
+Route::get('/drinkEvents', [DrinkEventController::class, 'index'])->middleware(['auth:sanctum', 'admin']);         // auth && admin
+Route::post('/drinkEvent', [DrinkEventController::class, 'store'])->middleware(['auth:sanctum', 'admin']);         // auth && admin
+Route::delete('/drinkEvent/{id}', [DrinkEventController::class, 'delete'])->middleware(['auth:sanctum', 'admin']); // auth && admin

@@ -33,6 +33,12 @@
                     <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.index')">
                         {{ __('Categories') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('userEvent.index')" :active="request()->routeIs('userEvent.index')">
+                        {{ __('UserEvent') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('drinkEvent.index')" :active="request()->routeIs('drinkEvent.index')">
+                        {{ __('DrinkEvent') }}
+                    </x-nav-link>
                 </div>
             </div>
 

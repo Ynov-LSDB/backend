@@ -47,8 +47,6 @@
             addIfNotNull('role_id', role_id);
             addIfNotNull('status', status);
 
-            // Envoyer les données uniquement si au moins un champ est non nul
-            if (Object.keys(data).length > 4) {
                 $.ajax({
                     url: '/api/user',
                     type: 'POST',
@@ -65,9 +63,6 @@
                         alert('error, watch console');
                     }
                 });
-            } else {
-                alert('Veuillez remplir au moins les champs avec un astérisque.');
-            }
         }
 
     </script>

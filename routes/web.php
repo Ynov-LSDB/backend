@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\CategoryControllerWeb;
 use App\Http\Controllers\DrinkControllerWeb;
+use App\Http\Controllers\DrinkEventControllerWeb;
 use App\Http\Controllers\EventControllerWeb;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RankControllerWeb;
 use App\Http\Controllers\RoleControllerWeb;
 use App\Http\Controllers\UserControllerWeb;
+use App\Http\Controllers\UserEventControllerWeb;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +59,14 @@ Route::middleware(AdminMiddleware::class)->group(function () {
     Route::get('/categories', [CategoryControllerWeb::class, 'index'])->name('category.index');
     Route::get('/categoryEdit/{id}', [CategoryControllerWeb::class, 'edit'])->name('category.edit');
     Route::get('/categoryCreate', [CategoryControllerWeb::class, 'create'])->name('category.create');
+
+    Route::get('/userEvents', [UserEventControllerWeb::class, 'index'])->name('userEvent.index');
+    Route::get('/userEventEdit/{id}', [UserEventControllerWeb::class, 'edit'])->name('userEvent.edit');
+    Route::get('/userEventCreate', [UserEventControllerWeb::class, 'create'])->name('userEvent.create');
+
+    Route::get('/drinkEvents', [DrinkEventControllerWeb::class, 'index'])->name('drinkEvent.index');
+    Route::get('/drinkEventEdit/{id}', [DrinkEventControllerWeb::class, 'edit'])->name('drinkEvent.edit');
+    Route::get('/drinkEventCreate', [DrinkEventControllerWeb::class, 'create'])->name('drinkEvent.create');
 });
 
 require __DIR__.'/auth.php';

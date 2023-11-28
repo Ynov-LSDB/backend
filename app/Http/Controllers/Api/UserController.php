@@ -13,7 +13,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with(['role', 'rank', 'drink', 'events', 'doublette'])->get();
+        $users = User::with(['role', 'rank', 'drink', 'events', 'doublette'])->where('status', '=','ok')->get();
         return response()->json([
             'success' => true,
             'message' => 'OK',
@@ -188,7 +188,7 @@ class UserController extends Controller
         $userId = auth()->user()->id;
         // affiche le prochain event auquel l'utilisateur participe
         $user = User::with(['events'])->find($userId);
-        $nextEvent = $user['events']->sortBy('date')->last();
+        $nextEvent = $user['events']->where('status', '=','ok')->where('is_closed', '=', false)->sortBy('date')->last();
         if (!$nextEvent) {
             return response()->json([
                 'success' => true,
@@ -211,7 +211,7 @@ class UserController extends Controller
         $userId = auth()->user()->id;
         // affiche tous les events dans lesquel l'utilisateur participe
         $user = User::with(['events'])->find($userId);
-        $events = $user['events'];
+        $events = $user['events']->where('status', '=','ok')->where('is_closed', '=', false);
         foreach ($events as $event) {
             if ($event->imageURL) {
                 $event->imageURL = Storage::disk('s3')->temporaryUrl($event->imageURL, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
@@ -265,7 +265,7 @@ class UserController extends Controller
 
     public function getRankingPaginate(Request $request)
     {
-        $query = User::select('id', 'firstname', 'lastname', 'score')->orderBy('score', 'desc');
+        $query = User::select('id', 'firstname', 'lastname', 'score')->orderBy('score', 'desc')->where('status', '=','ok');
 
         if ($request->has('size')) {
             $users = $query->paginate($request->get('size'));
@@ -300,13 +300,22 @@ class UserController extends Controller
     {
         $userId = auth()->user()->id;
         $user = User::with(['events'])->find($userId);
-        if ($user['events']->find($id) != null) {
+        if ($user['events']->where('status', '=','ok')->where('is_closed', '=', false)->find($id) != null) {
             return response()->json([
                 'success' => false,
                 'message' => 'User already in event',
                 'data' => null
             ], 400);
         } else {
+            //check if the relation in user_event already exists
+            $userEvent = UserEvent::where('user_id', '=', $userId)->where('event_id', '=', $id)->first();
+            if ($userEvent) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User already in event',
+                    'data' => null
+                ], 400);
+            }
             UserEvent::create([
                 'user_id' => $userId,
                 'event_id' => $id

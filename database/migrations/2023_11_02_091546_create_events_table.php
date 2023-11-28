@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('is_food_on_site')->default(false);
             $table->integer('registered_limit');
             $table->string('team_style');
+            $table->boolean('is_closed')->default(false);
             $table->string('status')->default('OK')->nullable();
             $table->foreignIdFor(\App\Models\User::class,'creator_id');
             $table->timestamps();

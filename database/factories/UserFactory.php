@@ -33,10 +33,11 @@ class UserFactory extends Factory
             'doublette_user_id' => null,
             'triplette_id' => null,
             'quadrette_id' => null,
+            'role_id' => 2,
             'status' => "OK",
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
-            'score' => random_int(0, 9999),
+            'score' => random_int(50, 200),
         ];
     }
 

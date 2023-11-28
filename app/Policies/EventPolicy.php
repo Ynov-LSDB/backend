@@ -65,4 +65,9 @@ class EventPolicy
         //return $user->isAdmin() || $user->id === $event->creator_id;
         return false;
     }
+
+    public function close(User $user, Event $event): Response
+    {
+        return $user->isAdmin() || $user->id === $event->creator_id ? Response::allow() : Response::deny('You do not own this event.');
+    }
 }

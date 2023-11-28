@@ -20,7 +20,7 @@ class EventController extends Controller
 
     public function index()
     {
-        $events = Event::with('category')->get();
+        $events = Event::with('category')->where('status', '=','ok')->where('is_closed', '=', false)->get();
         foreach ($events as $event) {
             if ($event->imageURL) {
                 $event->imageURL = Storage::disk('s3')->temporaryUrl($event->imageURL, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
@@ -35,7 +35,7 @@ class EventController extends Controller
 
     public function show($id)
     {
-        $event = Event::with(['category', 'drinks', 'users'])->find($id);
+        $event = Event::with(['category', 'drinks', 'users'])->where('status', '=','ok')->find($id);
         if (!$event) {
             return response()->json([
                 'success' => false,
@@ -155,7 +155,7 @@ class EventController extends Controller
     public function last()
     {
         //by created at
-        $event = Event::with('category')->where('status', '=','À venir')->orderBy('created_at', 'desc')->first();
+        $event = Event::with('category')->where('status', '=','ok')->where('is_closed', '=', false)->orderBy('created_at', 'desc')->first();
         if (!$event) {
             return response()->json([
                 'success' => false,
@@ -171,5 +171,56 @@ class EventController extends Controller
                 'data' => $event
             ], 200);
         }
+    }
+
+    public function close($id)
+    {
+        $event = Event::findOrFail($id);
+        $this->authorize('close', $event);
+        $request = request()->all();
+        $firstUser = UserEvent::where('user_id', '=', $request['first'])->where('event_id', '=', $id)->first();
+        $secondUser = UserEvent::where('user_id', '=', $request['second'])->where('event_id', '=', $id)->first();
+        $thirdUser = UserEvent::where('user_id', '=', $request['third'])->where('event_id', '=', $id)->first();
+
+        //check if the users are in the event && are different
+        if (!$firstUser || !$secondUser || !$thirdUser || $firstUser->user_id == $secondUser->user_id || $firstUser->user_id == $thirdUser->user_id || $secondUser->user_id == $thirdUser->user_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Users not found in the event or are the same'
+            ], 400);
+        }
+
+        //check if the event is already closed
+        if ($event->is_closed) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Event already closed'
+            ], 400);
+        }
+
+        // give points to the users
+        $users = UserEvent::where('event_id', '=', $id)->get();
+        $averageScore = 0;
+        foreach ($users as $user) {
+            $averageScore += $user->user->score;
+        }
+        $averageScore = $averageScore / count($users);
+
+        $firstUser->user->score += $averageScore * 0.1;
+        $secondUser->user->score += $averageScore * 0.05;
+        $thirdUser->user->score += $averageScore * 0.03;
+        $firstUser->user->save();
+        $secondUser->user->save();
+        $thirdUser->user->save();
+
+        $event->is_closed = true;
+        $event->save();
+
+        return response()->json([
+            'success' => true,
+            'averageScore' => $averageScore,
+            'message' => 'Event closed',
+            'data' => $event
+        ], 200);
     }
 }

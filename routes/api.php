@@ -55,6 +55,7 @@ Route::get('/event/{id}', [EventController::class, 'show']);
 Route::post('/event', [EventController::class, 'store'])->middleware(['auth:sanctum']);                            // auth
 Route::delete('/event/{id}', [EventController::class, 'delete'])->middleware(['auth:sanctum']);                    // auth && (admin || creator_id == user_id)
 Route::post('/event/{id}', [EventController::class, 'update'])->middleware('auth:sanctum');              // auth && (admin || creator_id == user_id)
+Route::post('/event/close/{id}', [EventController::class, 'close'])->middleware('auth:sanctum');         // auth && (admin || creator_id == user_id)
 
 //All routes for DrinkController
 Route::get('/drinks', [DrinkController::class, 'index']);

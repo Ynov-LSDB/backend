@@ -22,7 +22,8 @@ class Event extends Model
         'is_food_on_site',
         'registered_limit',
         'team_style',
-        'status',
+        'is_closed',
+        'status'
     ];
 
     public function category()

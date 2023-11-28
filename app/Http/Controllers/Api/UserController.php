@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserEvent;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -206,7 +207,7 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function inEvent()
+    public function inEvent(Request $request)
     {
         $userId = auth()->user()->id;
         // affiche tous les events dans lesquel l'utilisateur participe
@@ -236,15 +237,15 @@ class UserController extends Controller
     {
         $userId = auth()->user()->id;
         // affiche tous les events dans lesquel l'utilisateur ne participe pas
-        $events = UserEvent::with(['event'])
-            ->where('user_id', '!=', $userId)
-            ->groupBy('event_id')
-            ->selectRaw('event_id')
-            ->get();
+        $events = Event::whereNotIn('id', function ($query) use ($userId) {
+            $query->select('event_id')
+                ->from('user_events')
+                ->where('user_id', '=', $userId);
+        })->get();
+        $events = $events->where('status', '=','À venir')->where('is_closed', '=', false);
         foreach ($events as $event) {
-            $data[] = $event['event'];
-            if ($event['event']->imageURL) {
-                $event['event']->imageURL = Storage::disk('s3')->temporaryUrl($event['event']->imageURL, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+            if ($event->imageURL) {
+                $event->imageURL = Storage::disk('s3')->temporaryUrl($event['event']->imageURL, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
             }
         }
 
@@ -258,7 +259,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => count($events) . ' event(s) found',
-                'data' => $data
+                'data' => $events
             ], 200);
         }
     }

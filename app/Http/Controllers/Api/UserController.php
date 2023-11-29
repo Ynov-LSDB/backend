@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 use App\Models\User;
 use App\Models\UserEvent;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
@@ -210,9 +209,11 @@ class UserController extends Controller
     public function inEvent(Request $request)
     {
         $userId = auth()->user()->id;
-        // affiche tous les events dans lesquel l'utilisateur participe
-        $user = User::with(['events'])->find($userId);
-        $events = $user['events']->where('status', '=','ok')->where('is_closed', '=', false);
+
+        $events = Event::with(['users'])->where('status', '=','ok')->where('is_closed', '=', false)->whereHas('users', function ($query) use ($userId) {
+            $query->where('user_id', '=', $userId);
+        })->paginate($request->get('size', 10));
+
         foreach ($events as $event) {
             if ($event->imageURL) {
                 $event->imageURL = Storage::disk('s3')->temporaryUrl($event->imageURL, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
@@ -233,7 +234,7 @@ class UserController extends Controller
         }
     }
 
-    public function notInEvent()
+    public function notInEvent(Request $request)
     {
         $userId = auth()->user()->id;
         // affiche tous les events dans lesquel l'utilisateur ne participe pas
@@ -241,14 +242,12 @@ class UserController extends Controller
             $query->select('event_id')
                 ->from('user_events')
                 ->where('user_id', '=', $userId);
-        })->get();
-        $events = $events->where('status', '=','À venir')->where('is_closed', '=', false);
+        })->where('status', '=','ok')->where('is_closed', '=', false)->paginate($request->get('size', 10));
         foreach ($events as $event) {
             if ($event->imageURL) {
                 $event->imageURL = Storage::disk('s3')->temporaryUrl($event['event']->imageURL, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
             }
         }
-
         if (!$events) {
             return response()->json([
                 'success' => true,

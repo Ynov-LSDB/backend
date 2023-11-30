@@ -1,4 +1,11 @@
-# LSDB (Le Site de Boule) - Readme
+# LSDB (Le Site De Boule) - Readme
+
+## Prérequis (recommandé)
+- [npm (10.2.x)](https://www.npmjs.com/)
+- [node (21.2.x)](https://nodejs.org/en/download/)
+- PHP (8.x)
+- [composer (2.6.x)](https://getcomposer.org/download/)
+- [Docker (24.0.x)](https://docs.docker.com/engine/install/)
 
 ## Procédure d'Installation
 
@@ -42,7 +49,7 @@
     ```bash
     sail artisan migrate:fresh --seed
     ```
-   
+
 8. Dans un autre terminal, exécuter la compilation des assets avec npm :
     ```bash
     npm run dev
@@ -70,4 +77,10 @@ Lors du seeding, les comptes suivants ont été créés :
     - Mot de passe: password
 
 Vous pouvez également vous connecter avec n'importe quel autre compte, le mot de passe pour tous les comptes est `password`.
- 
+
+## Authors
+
+- [@QuentinSAIL](https://www.github.com/QuentinSAIL)
+- [@MatteoDinville](https://github.com/MatteoDinville)
+- [@GuilhemTrd](https://github.com/GuilhemTrd)
+- [@HPOIZAT](https://github.com/HPOIZAT)

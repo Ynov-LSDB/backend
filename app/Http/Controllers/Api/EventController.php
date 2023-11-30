@@ -33,6 +33,21 @@ class EventController extends Controller
         ], 200);
     }
 
+    public function indexPaginated()
+    {
+        $events = Event::with('category')->where('status', '=','ok')->where('is_closed', '=', false)->paginate(6);
+        foreach ($events as $event) {
+            if ($event->imageURL) {
+                $event->imageURL = Storage::disk('s3')->temporaryUrl($event->imageURL, now()->addMinutes(5)); //give a temporary url that expires in 5 minutes
+            }
+        }
+        return response()->json([
+            'success' => true,
+            'message' =>count($events) . " events found",
+            'data' => $events
+        ], 200);
+    }
+
     public function show($id)
     {
         $event = Event::with(['category', 'drinks', 'users'])->where('status', '=','ok')->find($id);

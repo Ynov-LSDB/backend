@@ -50,6 +50,7 @@ Route::post('/users/ranking/weekly-reduction', [UserController::class, 'weeklySc
 
 //All routes for EventController
 Route::get('/events', [EventController::class, 'index']);
+Route::get('/eventsPaginated', [EventController::class, 'indexPaginated']);
 Route::get('/event/last', [EventController::class, 'last']);
 Route::get('/event/{id}', [EventController::class, 'show']);
 Route::post('/event', [EventController::class, 'store'])->middleware(['auth:sanctum']);                            // auth
